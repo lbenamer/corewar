@@ -4,6 +4,19 @@
 # include "op.h"
 # include <stdio.h>
 
+# define STOP      	"\033[0m"
+# define BOLD       "\033[1m"
+# define ITALIC     "\033[3m"
+# define UNDERLINE  "\033[4m"
+# define BLACK   	"\033[30m"
+# define RED     	"\033[31m"
+# define GREEN   	"\033[32m"
+# define YELLOW  	"\033[33m"
+# define BLUE   	"\033[34m"
+# define MAGENTA 	"\033[35m"
+# define CYAN    	"\033[36m"
+# define WHITE   	"\033[37m"
+
 typedef struct 	s_dt
 {
 	char 	*name;
@@ -17,7 +30,7 @@ typedef struct 	s_dt
 
 typedef struct s_pcs
 {
-	size_t 	pc;
+	short 	pc;
 	char 	carry;
 	int 	r[16];
 	char	oct;
@@ -28,14 +41,20 @@ typedef struct s_pcs
 
 typedef struct s_vm
 {
-	size_t 	live[4];
 
 }				t_vm;
+
+// instruct.c :
+void 	zjmp(t_pcs *pcs, char *ram);
+void	live(t_pcs *pcs , char *ram);
+void	sti(t_pcs *pcs, char *ram);
+void 	and(t_pcs *pcs, char *ram);
+
 //get.c
 
 t_dt  *new_dt(int fd, int player);
 char *get_string(int fd, size_t size);
-int get_int(int fd);
+int get_size(int fd);
 char 	*get_prog(int fd, unsigned int size);
 t_dt 	*get_dt(t_dt *dt, int fd);
 

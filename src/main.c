@@ -1,4 +1,4 @@
-#include "corewar.h"
+ #include "corewar.h"
 int 	nb_process(t_dt *dt)
 {
 	int ret;
@@ -91,12 +91,20 @@ int main(int ac, char const **av)
 	}
 	fd = open("ram.txt", O_RDWR|O_CREAT|O_TRUNC, S_IRWXU);
 	ram = load_process(dt);
-	print_mem(ram, MEM_SIZE, fd);
 	pcs = create_pcs(dt, pcs);
 	disp_pcs(pcs);
-
-	disp_dt(dt);
-	system("open ram.txt");
+	sti(pcs, ram);
+	//printf("pc = %hd\n", pcs->pc);
+	and(pcs, ram + pcs->pc);
+	//printf("and pc = %hd\n", pcs->pc);
+	live(pcs, ram + pcs->pc);
+	//printf("pc = %hd\n", pcs->pc);
+	zjmp(pcs, ram + pcs->pc);
+	printf("jump pc  = %hd\n", pcs->pc);
+	live(pcs, ram + pcs->pc);
+//m	printf("pc = %hd\n", pcs->pc);
+	print_mem(ram, MEM_SIZE, fd);
+	//system("open ram.txt");
 	
 	return 0;
 }
