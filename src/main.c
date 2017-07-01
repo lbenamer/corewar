@@ -21,6 +21,9 @@ char	*load_process(t_dt *dt)
 	n = 0;
 	part = MEM_SIZE / nb_process(dt);
 	ram = (char*)ft_memalloc(sizeof(char) * MEM_SIZE + 1);
+	// while(n < MEM_SIZE)
+	// 	ram[n++] = 0xFF;
+	// n = 0;
 	while(tmp)
 	{
 		ft_memcpy(ram + n, tmp->prog, tmp->size);
@@ -30,14 +33,17 @@ char	*load_process(t_dt *dt)
 	return (ram);
 }
 
-t_pcs  *new_pcs(int player, char *name)
+t_pcs  *new_pcs(int player, char *name, int pc, int nb)
 {
 	t_pcs *pcs;
 
 	pcs = (t_pcs*)ft_memalloc(sizeof(t_pcs));
+	pcs->r = (int*)ft_memalloc(sizeof(int) * 17);
 	pcs->r[0] = player;
+	pcs->nb = nb;
 	pcs->carry = 0;
-	pcs->pc = 0;
+	pcs->pc = pc;
+	pcs->cycle = 1;
 	pcs->name = name;
 	pcs->next = NULL;
 	pcs->prev = NULL;
@@ -47,15 +53,21 @@ t_pcs  *new_pcs(int player, char *name)
 t_pcs 	*create_pcs(t_dt *dt, t_pcs *pcs)
 {
 	t_pcs *tmp;
+	int pc;
+	int nb;
 
-	pcs = new_pcs(dt->player, dt->name);
+	nb = 1;
+	pc = MEM_SIZE / nb_process(dt);
+	pcs = new_pcs(dt->player, dt->name, 0, 1);
 	tmp = pcs;
 	dt = dt->next;
 	while(dt)
 	{
-		tmp->next = new_pcs(dt->player, dt->name);
+		tmp->next = new_pcs(dt->player, dt->name, pc, ++nb);
+		// tmp->next->next = pcs;
 		tmp = tmp->next;
 		dt = dt->next;
+		pc += pc;
 	}
 	return (pcs);
 }
@@ -66,16 +78,48 @@ void 	disp_pcs(t_pcs *pcs)
 	{
 		printf("r0 = %d\n", pcs->r[0]);
 		printf("name = %s\n", pcs->name);
+		printf("pc = %d\n", pcs->pc);
 		pcs = pcs->next;
 	}
 }
 
-int main(int ac, char const **av)
+t_pl  	*new_pl(int player, char *name, unsigned long live)
+{
+	t_pl *pl;
+
+	pl = (t_pl*)ft_memalloc(sizeof(t_pl));
+	pl->player = player;
+	pl->name = name;
+	pl->live = live;
+	pl->next = NULL;
+	return (pl);
+}
+
+t_pl *get_pl(t_pcs *pcs)
+{
+
+	t_pl *pl;
+	t_pl *tmp;
+	pl = new_pl(pcs->r[0], pcs->name, 0);
+	tmp = pl;
+	pcs = pcs->next;
+	while(pcs)
+	{
+		tmp->next = new_pl(pcs->r[0], pcs->name, 0);
+		tmp = tmp->next;
+		pcs = pcs->next;
+	}
+	return (pl);
+}
+
+
+int main(int ac, char **av)
 {
 	int i;
 	int fd;
 	t_dt 	*dt;
-	char *ram;
+	// char *ram;
+	t_vm vm;
 	t_pcs *pcs;
 
 	i = -1;
@@ -90,21 +134,11 @@ int main(int ac, char const **av)
 			dt = get_dt(dt, fd);
 	}
 	fd = open("ram.txt", O_RDWR|O_CREAT|O_TRUNC, S_IRWXU);
-	ram = load_process(dt);
+	vm.ram = load_process(dt);
 	pcs = create_pcs(dt, pcs);
-	disp_pcs(pcs);
-	sti(pcs, ram);
-	//printf("pc = %hd\n", pcs->pc);
-	and(pcs, ram + pcs->pc);
-	//printf("and pc = %hd\n", pcs->pc);
-	live(pcs, ram + pcs->pc);
-	//printf("pc = %hd\n", pcs->pc);
-	zjmp(pcs, ram + pcs->pc);
-	printf("jump pc  = %hd\n", pcs->pc);
-	live(pcs, ram + pcs->pc);
-//m	printf("pc = %hd\n", pcs->pc);
-	print_mem(ram, MEM_SIZE, fd);
-	//system("open ram.txt");
-	
+	vm.plst = get_pl(pcs);
+	disp_vm(&vm);
+	run_pcs(pcs, &vm);
+	disp_vm(&vm);
 	return 0;
 }

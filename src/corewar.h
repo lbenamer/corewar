@@ -30,25 +30,44 @@ typedef struct 	s_dt
 
 typedef struct s_pcs
 {
-	short 	pc;
+	unsigned short 	pc;
 	char 	carry;
-	int 	r[16];
-	char	oct;
+	int 	*r;
+	int  	nb;
+	int 	cycle;
 	char 	*name;
 	struct s_pcs *next;
 	struct s_pcs *prev;
 }				t_pcs;
 
+typedef struct s_pl
+{
+	char *name;
+	int player;
+	unsigned long live;
+	struct s_pl *next;
+}				t_pl;
+
+
 typedef struct s_vm
 {
-
-}				t_vm;
-
+	char *ram;
+	t_pl  *plst;
+}				t_vm;		
+ 
 // instruct.c :
-void 	zjmp(t_pcs *pcs, char *ram);
-void	live(t_pcs *pcs , char *ram);
-void	sti(t_pcs *pcs, char *ram);
-void 	and(t_pcs *pcs, char *ram);
+void  	zjmp(t_pcs *pcs, t_vm *vm);
+void 	live(t_pcs *pcs , t_vm *vm);
+void 	sti(t_pcs *pcs, t_vm *vm);
+void 	and(t_pcs *pcs, t_vm *vm);
+void 	or(t_pcs *pcs, t_vm *vm);
+void 	xor(t_pcs *pcs, t_vm *vm);
+void 	st(t_pcs *pcs, t_vm *vm);
+void 	ld(t_pcs *pcs, t_vm *vm);
+void 	add(t_pcs *pcs, t_vm *vm);
+void 	sub(t_pcs *pcs, t_vm *vm);
+void 	myfork(t_pcs *pcs, t_vm *vm);
+void	lfork(t_pcs *pcs, t_vm *vm);
 
 //get.c
 
@@ -63,8 +82,16 @@ t_dt 	*get_dt(t_dt *dt, int fd);
 unsigned char	*mem_rev(unsigned char *mem, int n);
 int 	chk_magic(int fd);
 
+// main.c
+t_pcs  *new_pcs(int player, char *name, int pc, int nb);
+t_pl  	*new_pl(int player, char *name, unsigned long live);
+
+// run_pcs.c
+void 	run_pcs(t_pcs *pcs, t_vm *vm);
 
 // debug :
 void disp_dt(t_dt *dt);
+void 	disp_pcs(t_pcs *pcs);
 void print_mem(char *str, size_t n, int fd);
+void disp_vm(t_vm *vm);
 #endif

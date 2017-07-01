@@ -30,13 +30,18 @@ int get_size(int fd)
 {
 	unsigned char buf[4];
 	int ret;
+	int n;
+	int d = -8;
 
 	read(fd, buf, 4);
-	ret = 0x00000000;
-	ret = (ret | buf[3]);
-	ret += ((0x00 |  buf[2]) << 8);
-	ret += (0x00 | buf[1]) << 16;
-	ret += (0x00 | buf[0]) << 24;	
+	ret = 0;
+	n = 4;
+	while(--n > -1)
+		ret += (0x00 | buf[n] << (d += 8));
+	// ret = (ret | buf[3]);
+	// ret += ((0x00 |  buf[2]) << 8);
+	// ret += (0x00 | buf[1]) << 16;
+	// ret += (0x00 | buf[0]) << 24;	
 	return (ret);
 }
 
@@ -54,13 +59,13 @@ t_dt 	*get_dt(t_dt *dt, int fd)
 	t_dt *tmp;
 
 	if(!dt)
-		dt = new_dt(fd, 1);
+		dt = new_dt(fd, -1);
 	else
 	{
 		tmp = dt;
 		while(tmp->next)
 			tmp = tmp->next;
-		tmp->next = new_dt(fd, tmp->player + 1);
+		tmp->next = new_dt(fd, tmp->player - 1);
 		tmp->next->prev = tmp;
 	}
 	return (dt);

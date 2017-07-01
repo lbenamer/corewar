@@ -15,11 +15,12 @@ RM      =   rm -f
 CFLAGS  =  -Wall -Werror -Wextra
 LIB		=	-L./libft -lft
 NAME    =   cor
-SRCS    =   src/main.c \
-			src/get.c \
-			src/chk.c \
-			src/instruct.c
-			 
+SRCS    =	src2/main.c \
+			src2/get.c \
+			src2/chk.c \
+			src2/instruct.c \
+			src2/run_pcs.c 
+
 OBJS    =   $(SRCS:.c=.o)
 
 all:        $(NAME)
