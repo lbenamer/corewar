@@ -142,7 +142,7 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 	 int die = CYCLE_TO_DIE + CYCLE_DELTA;
 	 int total;
 	 total = 1;
-	  int dump = 50;
+	  int dump = 500000000;
 
 	pcs = place_max(pcs);
 	tmp = pcs;
