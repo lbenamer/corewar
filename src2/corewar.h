@@ -52,8 +52,9 @@ typedef struct s_pl
 
 typedef struct s_vm
 {
-	char *ram;
-	t_pl  *plst;
+	char 	*ram;
+	t_pl  	*plst;
+	int 	last_live;
 }				t_vm;		
  
 // instruct.c :
@@ -96,7 +97,8 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm);
 
 // debug :
 void disp_dt(t_dt *dt);
-void 	disp_pcs(t_pcs *pcs);
+// void 	disp_pcs(t_pcs *pcs);
 void print_mem(char *str, size_t n, int fd);
 void disp_vm(t_vm *vm);
+void disp_pcs(t_pcs *pcs);
 #endif

@@ -42,6 +42,7 @@ t_pcs  *new_pcs(int player, char *name, int pc, int nb)
 	pcs->r[0] = player;
 	pcs->nb = nb;
 	pcs->carry = 0;
+	pcs->alive = 0;
 	pcs->pc = pc;
 	pcs->cycle = 1;
 	pcs->name = name;
@@ -64,6 +65,7 @@ t_pcs 	*create_pcs(t_dt *dt, t_pcs *pcs)
 	while(dt)
 	{
 		tmp->next = new_pcs(dt->player, dt->name, pc, ++nb);
+		tmp->next->prev = tmp;
 		// tmp->next->next = pcs;
 		tmp = tmp->next;
 		dt = dt->next;
@@ -74,11 +76,14 @@ t_pcs 	*create_pcs(t_dt *dt, t_pcs *pcs)
 
 void 	disp_pcs(t_pcs *pcs)
 {
-	while(pcs)
+	int n = n_pcs(pcs);
+	int i = 0;
+	while(i < n)
 	{
-		printf("r0 = %d\n", pcs->r[0]);
+		// printf("r0 = %d\n", pcs->r[0]);
 		printf("name = %s\n", pcs->name);
-		printf("pc = %d\n", pcs->pc);
+		printf("nb = %d\n", pcs->nb);
+		i++;
 		pcs = pcs->next;
 	}
 }
@@ -139,6 +144,7 @@ int main(int ac, char **av)
 	vm.plst = get_pl(pcs);
 	disp_vm(&vm);
 	run_pcs(pcs, &vm);
+	// disp_pcs(pcs);
 	disp_vm(&vm);
 	return 0;
 }

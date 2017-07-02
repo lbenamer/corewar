@@ -56,7 +56,11 @@ void print_mem(char *str, size_t n, int fd)
 	{
 		if(((i % 64) == 0) && i)
 			dprintf(fd, "\n");
-		if(i < 2048 && str[i] != 0)
+		if(i >= 602 && i <= 605)
+			dprintf(fd, GREEN"%.2hhx|"STOP, str[i]);
+		else if( i == 606)
+			dprintf(fd, RED"%.2hhx|"STOP, str[i]);
+		else if(i < 2048 && str[i] != 0)
 			dprintf(fd, BLUE"%.2hhx|"STOP, str[i]);
 		else if(i >= 2048  && i < 4096 && str[i] != 0)
 			dprintf(fd, RED"%.2hhx|"STOP, str[i]);

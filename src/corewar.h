@@ -35,6 +35,7 @@ typedef struct s_pcs
 	int 	*r;
 	int  	nb;
 	int 	cycle;
+	int 	alive;
 	char 	*name;
 	struct s_pcs *next;
 	struct s_pcs *prev;
@@ -68,6 +69,10 @@ void 	add(t_pcs *pcs, t_vm *vm);
 void 	sub(t_pcs *pcs, t_vm *vm);
 void 	myfork(t_pcs *pcs, t_vm *vm);
 void	lfork(t_pcs *pcs, t_vm *vm);
+//tool
+int find_nbmax(t_pcs *pcs);
+t_pcs *place_max(t_pcs *pcs);
+int 	n_pcs(t_pcs *pcs);
 
 //get.c
 

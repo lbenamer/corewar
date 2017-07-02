@@ -18,9 +18,9 @@ unsigned char	*mem_rev(unsigned char *mem, int n)
 
 int 	chk_magic(int fd)
 {
-	unsigned int magic = COREWAR_EXEC_MAGIC;
-	unsigned char* octet;
-	unsigned char buf[4];
+	unsigned int 	magic = COREWAR_EXEC_MAGIC;
+	unsigned char* 	octet;
+	unsigned char 	buf[4];
 
 	read(fd, buf, 4);
 	octet = (unsigned char *) & magic;
@@ -66,8 +66,6 @@ void print_mem(char *str, size_t n, int fd)
 			dprintf(fd, RED"%.2hhx|"STOP, str[i]);
 		else
 			dprintf(fd, "%.2hhx|", str[i]);
-	// 	if(((i % 32) == 0) && i)
-	// 		dprintf(2, "\n");
 	}
 	dprintf(fd,"\n");
 	dprintf(fd, "\n");
