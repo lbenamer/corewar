@@ -67,7 +67,7 @@ int 	load_param(t_pcs *pcs, char *ram, char opc, char n, int *p)
 	if(type == REG_CODE)
 	{
 		reg = ram[pcs->pc];
-		if(reg > 0 && reg < 17)
+		reg &= 0xf;
 			*p = pcs->r[reg - 1];
 		printf(" r%d ", reg);
 		return (REG_CODE);
@@ -98,27 +98,30 @@ void 	zjmp(t_pcs *pcs, t_vm *vm)
 		printf("zjmp -> %d OK ", p);
 	}
 	else
+	{
+		pcs->pc += 3;
 		printf("zjmp NULL");
+	}
 	printf("\n");
 }
 
 void sub(t_pcs *pcs, t_vm *vm)
 {
-
+	printf(YELLOW"sub is call -"STOP);
 	int p[3] = {0, 0 , 0};
 	char opc;
 
 	opc = (vm->ram + pcs->pc)[1];
-	pcs += 2;
+	pcs->pc += 2;
 	pcs->pc += load_param(pcs, vm->ram, opc, 1, &p[0]);
 	pcs->pc += load_param(pcs, vm->ram, opc, 2, &p[1]);
 	p[2] = (vm->ram + pcs->pc)[0];
-	if(p[2] > 0 && p[2] < 17)
-		pcs->r[p[2] - 1] = p[0] - p[1];
+	p[2] &= 0xf;
+	pcs->r[p[2] - 1] = p[0] - p[1];
 	pcs->carry = !(p[0] - p[1]) ?  1 : 0;
 	pcs->pc += 1;
 
-	printf("sub is call -");
+	
 	printf(" r%d," , p[2]);
 	printf("\n");
 }
@@ -133,10 +136,10 @@ void 	add(t_pcs *pcs, t_vm *vm)
 	pcs->pc += 2;
 	pcs->pc += load_param(pcs, vm->ram, opc, 1, &p[0]);
 	pcs->pc += load_param(pcs, vm->ram, opc, 2, &p[1]);
-	p[2] = (vm->ram + pcs->pc + 2)[0];
+	p[2] = (unsigned char)(vm->ram + pcs->pc + 2)[0];
+	p[2] &= 0xf;
 	printf(" r%d," , p[2]);
-	if(p[2] > 0 && p[2] < 17)
-		pcs->r[p[2] - 1] = p[0] + p[1];
+	pcs->r[p[2] - 1] = p[0] + p[1];
 	pcs->carry = !(p[0] + p[1]) ?  1 : 0;
 	pcs->pc += 1;
 	printf("\n");
@@ -154,8 +157,8 @@ void 	and(t_pcs *pcs, t_vm *vm)
 	pcs->pc += load_param(pcs, vm->ram, opc ,2 , &p[1]);
 	p[2] = (vm->ram + pcs->pc)[0];
 	printf(" r%d," , p[2]);
-	if(p[2] > 0 && p[2] < 17)
-		pcs->r[p[2] - 1] = p[0] & p[1];
+	p[2] &= 0xf;
+	pcs->r[p[2] - 1] = p[0] & p[1];
 	pcs->carry = !(p[0] & p[1]) ?  1 : 0;
 	pcs->pc += 1;
 	printf("\n");
@@ -174,8 +177,8 @@ void 	or(t_pcs *pcs, t_vm *vm)
 	pcs->pc += load_param(pcs, vm->ram, opc ,2 , &p[1]);
 	p[2] = (vm->ram + pcs->pc)[0];
 	printf(" r%d," , p[2]);
-	if(p[2] > 0 && p[2] < 17)
-		pcs->r[p[2] - 1] = p[0] | p[1];
+	p[2] &= 0xf;
+	pcs->r[p[2] - 1] = p[0] | p[1];
 	pcs->carry = !(p[0] | p[1]) ?  1 : 0;
 	pcs->pc += 1;
 	printf("\n");
@@ -193,8 +196,8 @@ void 	xor(t_pcs *pcs, t_vm *vm)
 	pcs->pc += load_param(pcs, vm->ram, opc ,2 , &p[1]);
 	p[2] = (vm->ram + pcs->pc)[0];
 	printf(" r%d," , p[2]);
-	if(p[2] > 0 && p[2] < 17)
-		pcs->r[p[2] - 1] = p[0] ^ p[1];
+	p[2] &= 0xf;
+	pcs->r[p[2] - 1] = p[0] ^ p[1];
 	pcs->carry = !(p[0] ^ p[1]) ?  1 : 0;
 	pcs->pc +=  1;
 	printf("\n");
@@ -202,6 +205,7 @@ void 	xor(t_pcs *pcs, t_vm *vm)
 
 void ld(t_pcs *pcs, t_vm *vm)
 {
+	printf(YELLOW"ld is called - "STOP);
 	
 	int p[2] = {0, 0};
 	char opc;
@@ -210,39 +214,65 @@ void ld(t_pcs *pcs, t_vm *vm)
 	pcs->pc += 2;
 	pcs->pc += load_param(pcs, vm->ram, opc, 1, &p[0]);
 	p[1] = (vm->ram + pcs->pc)[0];
-	if(p[1] > 0 && p[1] <= 16)
-		pcs->r[p[1] - 1] = p[0];
+	p[1] &= 0xf;
+	pcs->r[p[1] - 1] = p[0];
 	pcs->carry = !p[0] ?  1 : 0;
 	pcs->pc += 1;
 
 
-	printf(YELLOW"ld is called - "STOP);
+	// printf(YELLOW"ld is called - "STOP);
 	printf(" r%d," , p[1]);
 	printf("\n");
 }
 
 
-void ldi(t_pcs *pcs, t_vm *vm)
+void lldi(t_pcs *pcs, t_vm *vm)
 {
-
+	printf(YELLOW"lldi is called - "STOP);
 	int p[3] = {0, 0, 0};
-	int pc;
 	char opc;
+	int pc;
 
+	pc = pcs->pc;
 	opc = (vm->ram + pcs->pc)[1];
 	pcs->pc += 2;
 	pcs->pc += load_param(pcs, vm->ram, opc | 0x40, 1, &p[0]);
-	pc += load_param(pcs, vm->ram, opc | 0x10, 2, &p[1]);
-	pc += load_param(pcs, vm->ram, opc | 0x4, 3, &p[2]);
+	pcs->pc += load_param(pcs, vm->ram, opc | 0x10, 2, &p[1]);
+	pcs->pc += load_param(pcs, vm->ram, opc | 0x4, 3, &p[2]);
 	p[0] += p[1];
-	p[0] %= IDX_MOD;
+	// p[0] &= 0x0fff;
 	p[0] = get_int(vm->ram, p[0]);
-	if(p[2] > 0 && p[2] < 17)
-		pcs->r[p[2] - 1] = p[0];
-	pcs->pc += pc + 2;
+	p[2] &= 0xf;
+	pcs->r[p[2] - 1] = p[0];
+
+	// printf(YELLOW"lldi is called - "STOP);
+	printf("with pc and mod %d," , p[0]);
+	printf("\n");
+}
+
+void ldi(t_pcs *pcs, t_vm *vm)
+{
 
 	printf(YELLOW"ldi is called - "STOP);
-	printf(" %d," , p[1]);
+	int p[3] = {0, 0, 0};
+	char opc;
+	int pc;
+
+	pc = pcs->pc;
+	opc = (vm->ram + pcs->pc)[1];
+	pcs->pc += 2;
+	pcs->pc += load_param(pcs, vm->ram, opc | 0x40, 1, &p[0]);
+	pcs->pc += load_param(pcs, vm->ram, opc | 0x10, 2, &p[1]);
+	pcs->pc += load_param(pcs, vm->ram, opc | 0x4, 3, &p[2]);
+	p[0] += p[1];
+	p[0] = pc + p[0] % IDX_MOD;
+	printf("with pc and mod %d," , p[0]);
+	p[0] = get_int(vm->ram, p[0]);
+	p[2] &= 0xf;
+	pcs->r[p[2] - 1] = p[0];
+
+	// printf(YELLOW"lldi is called - "STOP);
+	// printf("with pc and mod %d," , p[0]);
 	printf("\n");
 }
 
@@ -341,8 +371,8 @@ void st(t_pcs *pcs, t_vm *vm)
 		// printf("if\n");
 		p[1] = (vm->ram + pcs->pc + 2)[pc];
 		printf(" r%d," , p[1]);
-		if(p[1] < 17 && p[1] > -1)
-			pcs->r[p[1] - 1] = p[0];
+		p[1] &= 0xf;
+		pcs->r[p[1] - 1] = p[0];
 		pcs->pc += 1;
 	}
 	else
@@ -372,13 +402,19 @@ void	sti(t_pcs *pcs, t_vm *vm)
 	pcs->pc += load_param(pcs, vm->ram, opc, 1, &p[0]);	
 	pcs->pc += load_param(pcs, vm->ram, opc | 0x10 ,2 , &p[1]);
 	pcs->pc += load_param(pcs ,vm->ram, opc | 0x04 ,3 , &p[2]);
+	 // printf(" %d ", p[2]);
 	p[1] += p[2];
-	p[1] = p[1] % IDX_MOD;
+	printf(" = %d  ", p[1]);
+	p[1] = (pc + p[1]) % IDX_MOD;
+	p[1] &= 0x0FFF;
+	printf(" with mod and pc %d ", p[1]);
+	// printf(" p1 = %d ", p[1]);
+	// p[1] &= 0x0FFF;
 	pcs->carry = !p[1] ? 1 : 0;
 	buf = (unsigned char *) & p[0];
 	buf = mem_rev(buf, 4);
-	store(vm->ram, buf, 4, pc + p[1]);
-	printf(" - store to index : %d - ", pc + p[1]);
+	store(vm->ram, buf, 4, p[1]);
+	printf(" - store to index : %d - ",  p[1]);
 	printf("\n");
 }
 

@@ -113,6 +113,7 @@ void	check_winer(t_vm *vm)
 
 void 	run_pcs(t_pcs *pcs, t_vm *vm)
 {
+
 	t_pcs *tmp;
 	void	(*tb_instruct[17])(t_pcs*, t_vm*);
 	tb_instruct[0] = NULL;
@@ -125,10 +126,11 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 	tb_instruct[7] = &or;
 	tb_instruct[8] = &xor;
 	tb_instruct[9] = &zjmp;
+	tb_instruct[10] = &ldi;
 	tb_instruct[11] = &sti;
 	tb_instruct[12] = &myfork;
 	tb_instruct[13] = &ld;
-	tb_instruct[14] = &myfork;
+	tb_instruct[14] = &lldi;
 	tb_instruct[0x0F] = &lfork;
 
 	unsigned short rd;
@@ -142,7 +144,7 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 	 int die = CYCLE_TO_DIE + CYCLE_DELTA;
 	 int total;
 	 total = 1;
-	  int dump = 500000000;
+	 int dump = 2865;
 
 	pcs = place_max(pcs);
 	tmp = pcs;
@@ -156,7 +158,7 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 	 	{
 	 		rd = vm->ram[pcs->pc];
 	 		// printf(BLUE"rd = %d pcs->nb = %d\n"STOP, rd, pcs->nb);
-	 		if(rd > 0 && rd < 14 && rd != 10)
+	 		if(rd > 0 && rd < 16)
 			{	
 				// printf("K>O\n");
 				if(get_cycles(rd)  == pcs->cycle)

@@ -70,6 +70,8 @@ void 	add(t_pcs *pcs, t_vm *vm);
 void 	sub(t_pcs *pcs, t_vm *vm);
 void 	myfork(t_pcs *pcs, t_vm *vm);
 void	lfork(t_pcs *pcs, t_vm *vm);
+void 	ldi(t_pcs *pcs, t_vm *vm);
+void 	lldi(t_pcs *pcs, t_vm *vm);
 //tool
 int find_nbmax(t_pcs *pcs);
 t_pcs *place_max(t_pcs *pcs);
