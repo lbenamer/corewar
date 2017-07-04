@@ -120,7 +120,7 @@ brain:
 	zjmp	%:atf
 begin:
 	ld		%16777216, r16
-	sti		r16 ,%:first, %6
+	sti		r0 ,%:first, %6
 	st		r1, 117
 	sti		r1, %:sst, %1
 	ld		%507, r4

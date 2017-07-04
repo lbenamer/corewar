@@ -73,7 +73,10 @@ int  check_alive(t_pcs *pcs, int *cy, int *die, int *n_check)
 		if(!tmp->alive)
 		{
 			if(del_pcs(tmp) == -1)
+			{
+				printf("all process are dead \n");
 				return (-1);
+			}
 			tmp = tmp->prev;
 		}
 		else
@@ -83,12 +86,26 @@ int  check_alive(t_pcs *pcs, int *cy, int *die, int *n_check)
 			tmp = tmp->prev;	
 		}
 	}
-	if(total >= NBR_LIVE || *n_check == MAX_CHECKS)
+	if(total >= NBR_LIVE)
+	{
 		*die -= CYCLE_DELTA;
+		*n_check = 0;
+	}
+	else
+	{
+		++*n_check;
+		if(*n_check == MAX_CHECKS)
+		{
+			*die -= CYCLE_DELTA;
+			*n_check = 0;
+		}
+	}
+
 	*n_check == MAX_CHECKS ? *n_check = 0 : 0;
+	printf("die is now = %d\n", *die);
 	if(*die <= 0)
 	{
-		printf("die is now = %d\n", *die);
+		// printf("die is now = %d\n", *die);
 		return (-1);
 	}
 	*cy = 0;
@@ -129,22 +146,23 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 	tb_instruct[10] = &ldi;
 	tb_instruct[11] = &sti;
 	tb_instruct[12] = &myfork;
-	tb_instruct[13] = &ld;
+	tb_instruct[13] = &lld;
 	tb_instruct[14] = &lldi;
 	tb_instruct[0x0F] = &lfork;
 
 	unsigned short rd;
 	int cy = 1;
 	 // print_mem(vm->ram, MEM_SIZE, 2);
-	 printf("\n");
+	printf("\n");
 	 // int n;
 	 // int i = 0;
-	 int n_check = 0;
+	int n_check = 0;
 	 // n = pcs->nb;
-	 int die = CYCLE_TO_DIE + CYCLE_DELTA;
-	 int total;
-	 total = 1;
-	 int dump = 2865;
+	int die = CYCLE_TO_DIE;
+	int total;
+	total = 1;
+	int dump = 1000000;
+	// int dump = 300;
 
 	pcs = place_max(pcs);
 	tmp = pcs;
@@ -156,6 +174,7 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 		printf("it's now cycle : %d\n", total);
 	 	while(pcs)
 	 	{
+	 		pcs->pc %= 0x0fff;
 	 		rd = vm->ram[pcs->pc];
 	 		// printf(BLUE"rd = %d pcs->nb = %d\n"STOP, rd, pcs->nb);
 	 		if(rd > 0 && rd < 16)
@@ -164,7 +183,8 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 				if(get_cycles(rd)  == pcs->cycle)
 				{
 					// printf("K>O 2\n");
-					printf("P %d - ", pcs->nb);
+					// printf("rd = %d\n", rd);
+					printf("P      %d | ", pcs->nb);
 					tb_instruct[rd](pcs, vm);
 					pcs->cycle = 1;
 				}
@@ -172,22 +192,23 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 					++pcs->cycle;
 			}
 			else
+			{
 				++pcs->pc;
+				++pcs->cycle;
+			}
 			pcs = pcs->prev;
 	 	}
-	 	pcs = tmp;
-	 	pcs = place_max(pcs);
-	 	++cy;
-	 	++total;
-	 	// printf("die = %d || cycle = %d \n", die, cy);
-	 	if(cy == die)
+	 	pcs = place_max(tmp);
+	 	if(cy == die + 1)
 	 	{
 	 		++n_check;
 	 		if(check_alive(pcs, &cy, &die, &n_check) == -1)
 				break;
 	 	}
+	 	++cy;
+	 	++total;
 	}
-	printf("it's now cycle : %d\n", total);
+	// printf("it's now cycle : %d\n", total);
 	print_mem(vm->ram, MEM_SIZE, 1);
-	check_winer(vm);
+ 	check_winer(vm);
 }

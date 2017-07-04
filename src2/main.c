@@ -37,6 +37,7 @@ t_pcs  *new_pcs(int player, char *name, int pc, int nb)
 	pcs = (t_pcs*)ft_memalloc(sizeof(t_pcs));
 	pcs->r = (int*)ft_memalloc(sizeof(int) * 17);
 	pcs->r[0] = player;
+	pcs->player = player;
 	pcs->nb = nb;
 	pcs->carry = 0;
 	pcs->alive = 0;
@@ -131,6 +132,6 @@ int main(int ac, char **av)
 	print_mem(vm.ram, MEM_SIZE, 1);
 	run_pcs(pcs, &vm);
 	// disp_pcs(pcs);
-	       disp_vm(&vm);
+	 disp_vm(&vm);
 	return 0;
 }

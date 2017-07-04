@@ -4,16 +4,16 @@
 # include "op.h"
 # include <stdio.h>
 
-# define STOP      	"\033[0m"
-# define BOLD       "\033[1m"
-# define ITALIC     "\033[3m"
-# define UNDERLINE  "\033[4m"
-# define BLACK   	"\033[30m"
-# define RED     	"\033[31m"
-# define GREEN   	"\033[32m"
-# define YELLOW  	"\033[33m"
-# define BLUE   	"\033[34m"
-# define MAGENTA 	"\033[35m"
+# define STOP      "" //	"\033[0m"    // \033[0
+# define BOLD      "" // "\033[1m"
+# define ITALIC    "" // "\033[3m"
+# define UNDERLINE "" // "\033[4m"
+# define BLACK   	"" //"\033[30m"
+# define RED     "" //	"\033[31m"
+# define GREEN   "" //	"\033[32m"
+# define YELLOW  	""   //\033[33m
+# define BLUE   	"" //"\033[34m"
+# define MAGENTA 	"" //"\033[35m"
 # define CYAN    	"\033[36m"
 # define WHITE   	"\033[37m"
 
@@ -37,6 +37,7 @@ typedef struct s_pcs
 	int 	cycle;
 	int 	alive;
 	char 	*name;
+	int 	player;
 	struct s_pcs *next;
 	struct s_pcs *prev;
 }				t_pcs;
@@ -72,6 +73,7 @@ void 	myfork(t_pcs *pcs, t_vm *vm);
 void	lfork(t_pcs *pcs, t_vm *vm);
 void 	ldi(t_pcs *pcs, t_vm *vm);
 void 	lldi(t_pcs *pcs, t_vm *vm);
+void 	lld(t_pcs *pcs, t_vm *vm);
 //tool
 int find_nbmax(t_pcs *pcs);
 t_pcs *place_max(t_pcs *pcs);
