@@ -21,9 +21,6 @@ char	*load_process(t_dt *dt)
 	n = 0;
 	part = MEM_SIZE / nb_process(dt);
 	ram = (char*)ft_memalloc(sizeof(char) * MEM_SIZE + 1);
-	// while(n < MEM_SIZE)
-	// 	ram[n++] = 0xFF;
-	// n = 0;
 	while(tmp)
 	{
 		ft_memcpy(ram + n, tmp->prog, tmp->size);
@@ -40,6 +37,7 @@ t_pcs  *new_pcs(int player, char *name, int pc, int nb)
 	pcs = (t_pcs*)ft_memalloc(sizeof(t_pcs));
 	pcs->r = (int*)ft_memalloc(sizeof(int) * 17);
 	pcs->r[0] = player;
+	pcs->player = player;
 	pcs->nb = nb;
 	pcs->carry = 0;
 	pcs->alive = 0;
@@ -51,41 +49,29 @@ t_pcs  *new_pcs(int player, char *name, int pc, int nb)
 	return (pcs);
 }
 
-t_pcs 	*create_pcs(t_dt *dt, t_pcs *pcs)
+t_pcs 	*create_pcs(t_dt *dt)
 {
 	t_pcs *tmp;
+	t_pcs *pcs;
 	int pc;
+	int n_pcs;
 	int nb;
 
 	nb = 1;
-	pc = MEM_SIZE / nb_process(dt);
-	pcs = new_pcs(dt->player, dt->name, 0, 1);
+	n_pcs = nb_process(dt);
+	pc = MEM_SIZE / n_pcs;
+	pcs = new_pcs(dt->player, dt->name, 0, nb);
 	tmp = pcs;
 	dt = dt->next;
 	while(dt)
 	{
 		tmp->next = new_pcs(dt->player, dt->name, pc, ++nb);
 		tmp->next->prev = tmp;
-		// tmp->next->next = pcs;
 		tmp = tmp->next;
 		dt = dt->next;
-		pc += pc;
+		pc += MEM_SIZE / n_pcs;
 	}
 	return (pcs);
-}
-
-void 	disp_pcs(t_pcs *pcs)
-{
-	int n = n_pcs(pcs);
-	int i = 0;
-	while(i < n)
-	{
-		// printf("r0 = %d\n", pcs->r[0]);
-		printf("name = %s\n", pcs->name);
-		printf("nb = %d\n", pcs->nb);
-		i++;
-		pcs = pcs->next;
-	}
 }
 
 t_pl  	*new_pl(int player, char *name, unsigned long live)
@@ -140,11 +126,12 @@ int main(int ac, char **av)
 	}
 	fd = open("ram.txt", O_RDWR|O_CREAT|O_TRUNC, S_IRWXU);
 	vm.ram = load_process(dt);
-	pcs = create_pcs(dt, pcs);
+	pcs = create_pcs(dt);
 	vm.plst = get_pl(pcs);
 	disp_vm(&vm);
+	print_mem(vm.ram, MEM_SIZE, 1);
 	run_pcs(pcs, &vm);
 	// disp_pcs(pcs);
-	disp_vm(&vm);
+	 disp_vm(&vm);
 	return 0;
 }
