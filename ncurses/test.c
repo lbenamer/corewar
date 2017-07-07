@@ -151,7 +151,8 @@ int main(int argc, char **argv)
 	int cycles = 0;
 	getmaxyx(box_vm, y , x);
 	wattron(box_vm, A_BOLD);
-	mvwprintw(box_vm, i ,  4 , "Cycles : %d ", cycles);
+	mvwprintw(box_vm,  1,  4 , "Cycles : %d ", cycles);
+	mvwprintw(box_vm, 2 ,  4 , "Cycles to die : %d ", cycles);
 	wattroff(box_vm, A_BOLD);
 	wrefresh(box_vm);
 

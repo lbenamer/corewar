@@ -33,7 +33,6 @@ void st(t_pcs *pcs, t_vm *vm)
 	}
 	else
 	{
-		// printf("pc = %d\n", pcs->pc);
 		pcs->pc += load_param(pcs, vm->ram, opc, 2, &p[1]);
 		p[1] = pc + p[1] % IDX_MOD;
 		// p[1] &= 0x0FFF;
@@ -52,7 +51,6 @@ void	sti(t_pcs *pcs, t_vm *vm)
 	char opc;
 
 	pc = pcs->pc;
-	// printf("pc = %d", pcs->pc);	
 	opc = (vm->ram + pcs->pc)[1];
 	pcs->pc += 2;
 	pcs->pc += load_param(pcs, vm->ram, opc, 1, &p[0]);	
@@ -65,6 +63,5 @@ void	sti(t_pcs *pcs, t_vm *vm)
 	buf = mem_rev(buf, 4);
 	store(vm->ram, buf, 4, p[1]);
 	(ops.text & 1) ? printf("(with pc and mod: %d)",  p[1]) : 0;
-	// printf("carry = %d", pcs->carry);
 	(ops.text & 1) ? printf("\n") : 0;
 }
