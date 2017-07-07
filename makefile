@@ -19,7 +19,15 @@ SRCS    =	src2/main.c \
 			src2/get.c \
 			src2/chk.c \
 			src2/instruct.c \
-			src2/run_pcs.c 
+			src2/run_pcs.c \
+			src2/ins_logic.c \
+			src2/ins_load.c \
+			src2/ins_store.c \
+			src2/ins_fork.c \
+			src2/ins.c \
+			src2/tool.c \
+			src2/load_param.c \
+			src2/parse.c \
 
 OBJS    =   $(SRCS:.c=.o)
 

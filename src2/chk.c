@@ -52,15 +52,15 @@ void print_mem(char *str, size_t n, int fd)
 
 	i = -1;
 	fd = 0;
+	dprintf(fd, "0x%.4x : ", 0);
 	while(++i < n)
 	{
 		if(((i % 64) == 0) && i)
+		{
 			dprintf(fd, "\n");
-		if(i >= 602 && i <= 605)
-			dprintf(fd, GREEN"%.2hhx "STOP, str[i]);
-		else if( i == 606)
-			dprintf(fd, RED"%.2hhx "STOP, str[i]);
-		else if(i < 2048 && str[i] != 0)
+			dprintf(fd, "0x%.4zx : ", i);
+		}
+		if(i < 2048 && str[i] != 0)
 			dprintf(fd, BLUE"%.2hhx "STOP, str[i]);
 		else if(i >= 2048  && i < 4096 && str[i] != 0)
 			dprintf(fd, RED"%.2hhx "STOP, str[i]);

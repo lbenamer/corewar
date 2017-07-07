@@ -57,15 +57,23 @@ char 	*get_prog(int fd, unsigned int size)
 t_dt 	*get_dt(t_dt *dt, int fd)
 {
 	t_dt *tmp;
+	static int n = -1;
 
 	if(!dt)
-		dt = new_dt(fd, -1);
+	{
+		dt = checkops(N) ? new_dt(fd, ops.n) : new_dt(fd, n);
+		printf("Player: [ %d ] - Size : %d oct - Name: %s -> %s \n",dt->player, dt->size, dt->name, dt->com);
+	}
 	else
 	{
+		if(is_set(dt, n))
+			--n;
 		tmp = dt;
 		while(tmp->next)
 			tmp = tmp->next;
-		tmp->next = new_dt(fd, tmp->player - 1);
+		tmp->next = checkops(N) ? new_dt(fd, ops.n) : new_dt(fd, n);
+		printf("Player: [ %d ] - Size : %d oct - Name: %s -> %s \n",
+			tmp->next->player, tmp->next->size, tmp->next->name, tmp->next->com);
 		tmp->next->prev = tmp;
 	}
 	return (dt);

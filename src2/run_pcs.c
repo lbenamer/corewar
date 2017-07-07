@@ -7,8 +7,8 @@ void disp_pcs(t_pcs *pcs)
 	printf("disp pcs : \n");
 	while(tmp)
 	{
-		printf("Process  %d\n", tmp->nb);
-		tmp = tmp->prev;
+		printf("Process  %d\n", tmp->id);
+		tmp = tmp->next;
 	}
 	printf("\n");
 }
@@ -25,24 +25,19 @@ void disp_vm(t_vm *vm)
 	}
 }
 
-int get_cycles(int rd)
-{
-	int tab[17] = {0, 10, 5, 5, 10 , 10, 6 , 6, 6,20, 25, 25 ,800, 10 ,50, 1000, 2};
-	return(tab[rd]);
-}
 
 int	del_pcs(t_pcs *pcs)
 {
-
-	printf(RED"Process %d has been destroyed\n"STOP, pcs->nb);
-	// free(pcs);
+	(ops.text & 4) ? printf("Process %d has been destroyed\n", pcs->id) : 0;
+	free(pcs->r);
+	free(pcs);
 	if(!pcs->next && !pcs->prev)
 	{
 		pcs = NULL;
 		return (-1);
 	}
 	else if(!pcs->next)
-	{		
+	{	
 		pcs = pcs->prev;
 		pcs->next = NULL;
 	}
@@ -53,63 +48,70 @@ int	del_pcs(t_pcs *pcs)
 	}
 	else
 	{
-		pcs = pcs->next;
-		pcs->prev = pcs->prev->prev;
-		pcs->prev->next = pcs;
+		pcs->prev->next = pcs->next;
+		pcs->next->prev = pcs->prev;
 		pcs = pcs->prev;
 	}
 	return (1);
 }
 
-int  check_alive(t_pcs *pcs, int *cy, int *die, int *n_check)
+int check_alive(t_pcs **pcs)
 {
 	int total;
-	t_pcs *tmp;
 
-	tmp = pcs;
 	total = 0;
-	while(tmp)
+	while(*pcs)
 	{
-		if(!tmp->alive)
+		if(!(*pcs)->alive)
 		{
-			if(del_pcs(tmp) == -1)
+			if(del_pcs(*pcs) == -1)
 			{
-				printf("all process are dead \n");
+				(ops.text & 4) ? printf("all process are dead \n") : 0;
 				return (-1);
 			}
-			tmp = tmp->prev;
+			if(!(*pcs)->prev)
+				break ;
+			*pcs = (*pcs)->prev;
 		}
 		else
 		{
-			total += tmp->alive;
-			tmp->alive = 0;
-			tmp = tmp->prev;	
+			total += (*pcs)->alive;
+			(*pcs)->alive = 0;
+			if(!(*pcs)->prev)
+				break ;
+			*pcs = (*pcs)->prev;	
 		}
 	}
+	*pcs = place_max(*pcs);
+	return (total);
+}
+
+
+t_pcs  *check_to_die(t_pcs *pcs, int *die, int *n_check)
+{
+	static int 	cycle_to_die = CYCLE_TO_DIE;
+	int 		total;
+
+	if((total = check_alive(&pcs)) == -1)
+		return (NULL);
 	if(total >= NBR_LIVE)
-	{
-		*die -= CYCLE_DELTA;
+	{	
+		cycle_to_die -= CYCLE_DELTA;
+		*die = cycle_to_die;
 		*n_check = 0;
 	}
-	else
+	else if(*n_check == MAX_CHECKS)
 	{
-		++*n_check;
-		if(*n_check == MAX_CHECKS)
-		{
-			*die -= CYCLE_DELTA;
+			cycle_to_die -= CYCLE_DELTA;
+			*die = cycle_to_die;
 			*n_check = 0;
-		}
 	}
-
-	*n_check == MAX_CHECKS ? *n_check = 0 : 0;
-	printf("die is now = %d\n", *die);
-	if(*die <= 0)
-	{
-		// printf("die is now = %d\n", *die);
-		return (-1);
-	}
-	*cy = 0;
-	return (1);
+	else
+		*die = cycle_to_die;
+	(ops.text & 8) ? printf("die is now = %d\n", *die) : 0;
+	if(*die < 0)
+		return (NULL);
+	return (pcs);
 }
 
 void	check_winer(t_vm *vm)
@@ -128,87 +130,81 @@ void	check_winer(t_vm *vm)
 	}
 }
 
-void 	run_pcs(t_pcs *pcs, t_vm *vm)
+void 	clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 {
 
-	t_pcs *tmp;
-	void	(*tb_instruct[17])(t_pcs*, t_vm*);
-	tb_instruct[0] = NULL;
-	tb_instruct[1] = &live;
-	tb_instruct[2] = &ld;
-	tb_instruct[3] = &st;
-	tb_instruct[4] = &add;
-	tb_instruct[5] = &sub;
-	tb_instruct[6] = &and;
-	tb_instruct[7] = &or;
-	tb_instruct[8] = &xor;
-	tb_instruct[9] = &zjmp;
-	tb_instruct[10] = &ldi;
-	tb_instruct[11] = &sti;
-	tb_instruct[12] = &myfork;
-	tb_instruct[13] = &lld;
-	tb_instruct[14] = &lldi;
-	tb_instruct[0x0F] = &lfork;
-
-	unsigned short rd;
-	int cy = 1;
-	 // print_mem(vm->ram, MEM_SIZE, 2);
-	printf("\n");
-	 // int n;
-	 // int i = 0;
-	int n_check = 0;
-	 // n = pcs->nb;
-	int die = CYCLE_TO_DIE;
-	int total;
-	total = 1;
-	int dump = 1000000;
-	// int dump = 300;
-
-	pcs = place_max(pcs);
-	tmp = pcs;
-	while(die > 1)
+ 	unsigned short lx;
+ 	while(pcs)
 	{
-		if (total == dump + 1)
-			break;
-	
-		printf("it's now cycle : %d\n", total);
-	 	while(pcs)
-	 	{
-	 		pcs->pc %= 0x0fff;
-	 		rd = vm->ram[pcs->pc];
-	 		// printf(BLUE"rd = %d pcs->nb = %d\n"STOP, rd, pcs->nb);
-	 		if(rd > 0 && rd < 16)
-			{	
-				// printf("K>O\n");
-				if(get_cycles(rd)  == pcs->cycle)
-				{
-					// printf("K>O 2\n");
-					// printf("rd = %d\n", rd);
-					printf("P      %d | ", pcs->nb);
-					tb_instruct[rd](pcs, vm);
-					pcs->cycle = 1;
-				}
-				else
-					++pcs->cycle;
+	 	pcs->pc %= 0x0fff;
+	 	lx =  vm->ram[pcs->pc];
+	 	if(lx > 0 && lx < 17)
+		{	
+			if(get_cycles(lx)  == pcs->cycle)
+			{
+				(ops.text & 1) ? printf("P  %5d | ", pcs->id) : 0;
+				ins[lx](pcs, vm);
+				pcs->cycle = 1;
 			}
 			else
-			{
-				++pcs->pc;
 				++pcs->cycle;
-			}
-			pcs = pcs->prev;
-	 	}
+		}
+		else
+		{
+			++pcs->pc;
+			++pcs->cycle;
+		}
+		pcs = pcs->prev;
+	 }
+}
+
+void init_ins(t_ins *ins)
+{
+	ins[0] = NULL;
+	ins[1] = &live;
+	ins[2] = &ld;
+	ins[3] = &st;
+	ins[4] = &add;
+	ins[5] = &sub;
+	ins[6] = &and;
+	ins[7] = &or;
+	ins[8] = &xor;
+	ins[9] = &zjmp;
+	ins[10] = &ldi;
+	ins[11] = &sti;
+	ins[12] = &myfork;
+	ins[13] = &lld;
+	ins[14] = &lldi;
+	ins[0x0F] = &lfork;
+	ins[16] = &aff;
+}
+
+
+void 	run_pcs(t_pcs *pcs, t_vm *vm)
+{
+	t_pcs *tmp;
+	t_ins *tb_ins;
+	int n_check;
+	int die;
+	 
+	die = CYCLE_TO_DIE + 1;
+	n_check = 0;
+	vm->cycles = 0;
+	n_check = 0;
+	tb_ins = (t_ins*)ft_memalloc(sizeof(t_ins) * 17);
+	init_ins(tb_ins);
+	pcs = place_max(pcs);
+	while(++vm->cycles && --die >= 0)
+	{
+		if(ops.dump && vm->cycles == ops.dump + 1)
+				return ;
+		(ops.text & 2) ? printf("its now cycle : %d\n", vm->cycles) : 0;
+	 	tmp = pcs;
+	 	clock(pcs, vm, tb_ins);
 	 	pcs = place_max(tmp);
-	 	if(cy == die + 1)
-	 	{
-	 		++n_check;
-	 		if(check_alive(pcs, &cy, &die, &n_check) == -1)
+	 	if(!die && ++n_check)
+	 		if(!(pcs = check_to_die(pcs, &die, &n_check)))
 				break;
-	 	}
-	 	++cy;
-	 	++total;
 	}
-	// printf("it's now cycle : %d\n", total);
-	print_mem(vm->ram, MEM_SIZE, 1);
  	check_winer(vm);
 }
