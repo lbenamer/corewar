@@ -26,6 +26,14 @@ void disp_usage(int error, char *arg)
 }
 
 
+void 				init_t_vm(t_vm *vm)
+{
+	vm->cycles = 0;
+	vm->last_live = 0;
+	vm->plst = NULL;
+	vm->ram = NULL;
+}
+
 int main(int ac, char **av)
 {
 	t_dt 	*dt;
@@ -34,6 +42,7 @@ int main(int ac, char **av)
 	
 	nbr_pcs = 0;
 	init_ops(&ops);
+	init_t_vm(&vm);
 	t_pcs *pcs = NULL; 		//(t_pcs*)ft_memalloc(sizeof(t_pcs));
 	vm.plst =  NULL;  		//(t_pl*)ft_memalloc(sizeof(t_pl));
 	dt = parse_args(ac, av);

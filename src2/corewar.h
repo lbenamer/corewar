@@ -88,7 +88,7 @@ int 	checkops(int option);
 short 	get_short(char *ram, size_t add);
 int 	get_int(char *ram, size_t add);
 char 	read_opc(char opc,char n);
-int 	load_param(t_pcs *pcs, char *ram, char opc, char n, int *p);
+int 	load_param(t_pcs *pcs, char *ram, char opc, int *p);
 /*
 ** ins_logic.c
 */
@@ -183,7 +183,5 @@ void disp_dt(t_dt *dt);
 void disp_vm(t_vm *vm);
 void disp_pcs(t_pcs *pcs);
 
-
-typedef void (*t_ins)(t_pcs*, t_vm*);
 # include "../vizu/vizu.h"
 #endif

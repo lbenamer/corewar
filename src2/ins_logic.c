@@ -6,11 +6,13 @@ void sub(t_pcs *pcs, t_vm *vm)
 	int p[3] = {0, 0 , 0};
 	char opc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x40, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x10, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x40, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x10, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	pcs->r[p[2]] = p[0] - p[1];
@@ -27,11 +29,13 @@ void 	add(t_pcs *pcs, t_vm *vm)
 	int p[3] = {0, 0 , 0};
 	char opc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x40, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x10, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x40, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x10, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	pcs->r[p[2]] = p[0] + p[1];
@@ -48,11 +52,13 @@ void 	and(t_pcs *pcs, t_vm *vm)
 	int p[3] = {0, 0 , 0};
 	char opc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	pcs->r[p[2]] = p[0] & p[1];
@@ -69,11 +75,13 @@ void 	or(t_pcs *pcs, t_vm *vm)
 	int p[3] = {0, 0 , 0};
 	char opc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	pcs->r[p[2]] = p[0] | p[1];
@@ -90,11 +98,13 @@ void 	xor(t_pcs *pcs, t_vm *vm)
 	int p[3] = {0, 0 , 0};
 	char opc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	pcs->r[p[2]] = p[0] ^ p[1];

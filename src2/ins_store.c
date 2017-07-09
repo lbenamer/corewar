@@ -10,7 +10,6 @@ static char 	*store(char *mem, unsigned char *store, size_t size, size_t add)
 	return(mem);
 }
 
-
 void st(t_pcs *pcs, t_vm *vm)
 {
 	(ops.text & 1) ? printf("st - ") : 0;
@@ -19,12 +18,14 @@ void st(t_pcs *pcs, t_vm *vm)
 	unsigned char *buf;
 	char opc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pc = pcs->pc;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x40, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x40, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, &p[1])) % MEM_SIZE;
 	p[1] = pc + (p[1] % IDX_MOD);
 	p[1] %=  MEM_SIZE;
 	buf = (unsigned char *) & p[0];
@@ -42,14 +43,17 @@ void	sti(t_pcs *pcs, t_vm *vm)
 	unsigned char *buf;
 	char opc;
 
+	p[0] = 1;
+	p[1] = 2;
+	p[2] = 3;
 	(ops.text & 1) ? printf("sti - ") : 0;
 	pc = pcs->pc;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x40, 1, &p[0])) % MEM_SIZE;	
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, 2, &p[1])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs ,vm->ram, opc | 0x04, 3, &p[2])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x40, &p[0])) % MEM_SIZE;	
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs ,vm->ram, opc | 0x04, &p[2])) % MEM_SIZE;
 	(ops.text & 1) ? printf("\n         | -> store to: %d + %d = %d ", p[1], p[2], p[1] + p[2]) : 0;
 	p[1] = pc + ((p[1] + p[2]) % IDX_MOD);
 	p[1] %= MEM_SIZE; // change

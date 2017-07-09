@@ -1,20 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   run_pcs.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lbenamer <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/07/09 21:08:36 by lbenamer          #+#    #+#             */
+/*   Updated: 2017/07/09 21:08:38 by lbenamer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "corewar.h"
 
-static void 	clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
+static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 {
+	unsigned short lx;
 
- 	unsigned short lx;
- 	while(pcs)
+	while (pcs)
 	{
-	 	pcs->pc %= MEM_SIZE;
-	 	lx =  vm->ram[pcs->pc];
-	 	(ops.text & 1) ? printf(RED"P  %5d | pc = %d | lx = %d \n"STOP, pcs->id, pcs->pc, lx) : 0;
-	 	if(lx > 0 && lx < 17)
-		{	
-			if(get_cycles(lx)  == pcs->cycle)
+		// pcs->pc %= MEM_SIZE;
+		pcs->pc &= 0x0fff;
+		lx = vm->ram[pcs->pc];
+		if (lx > 0 && lx < 17)
+		{
+			if (get_cycles(lx) == pcs->cycle)
 			{
 				ops.all & V ? blink_pos(pcs->pc, lx, pcs->color) : 0;
-				(ops.text & 1) ? printf("P  %5d | pc = %d | ", pcs->id, pcs->pc) : 0;
+				(ops.text & 1) ? printf("P  %5d |", pcs->id) : 0;
 				ins[lx](pcs, vm);
 				pcs->cycle = 1;
 			}
@@ -27,10 +39,10 @@ static void 	clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 			++pcs->cycle;
 		}
 		pcs = pcs->prev;
-	 }
+	}
 }
 
-static void init_ins(t_ins *ins)
+static	void		init_ins(t_ins *ins)
 {
 	ins[0] = NULL;
 	ins[1] = &live;
@@ -51,36 +63,31 @@ static void init_ins(t_ins *ins)
 	ins[16] = &aff;
 }
 
-
-void 	run_pcs(t_pcs *pcs, t_vm *vm)
+void				run_pcs(t_pcs *pcs, t_vm *vm)
 {
-	t_pcs *tmp;
-	t_ins *tb_ins;
-	int n_check;
-	int die;
-	int ch;
-	 
+	t_pcs	*tmp;
+	t_ins	*tb_ins;
+	int		n_check;
+	int		die;
+
 	die = CYCLE_TO_DIE + 1;
-	n_check = 0;
-	vm->cycles = 0;
 	n_check = 0;
 	tb_ins = (t_ins*)ft_memalloc(sizeof(t_ins) * 17);
 	init_ins(tb_ins);
 	pcs = place_max(pcs);
-	while(++vm->cycles && --die >= 0)
+	while (++vm->cycles && --die >= 0)
 	{
-		ch = 0;
-		if(ops.dump && vm->cycles == ops.dump + 1)
-				return ;
+		if (ops.dump && vm->cycles == ops.dump + 1)
+			return ;
 		(ops.text & 2) ? printf("its now cycle : %d\n", vm->cycles) : 0;
 		ops.all & V ? print_cycles(vm->cycles) : 0;
-	 	tmp = pcs;
-	 	clock(pcs, vm, tb_ins);
-	 	ops.all & V ? usleep(500) : 0;
-	 	pcs = place_max(tmp);
-	 	if(!die && ++n_check)
-	 		if(!(pcs = check_to_die(pcs, &die, &n_check)))
-				break;
+		tmp = pcs;
+		clock(pcs, vm, tb_ins);
+		ops.all & V ? usleep(700) : 0;
+		pcs = place_max(tmp);
+		if (!die && ++n_check)
+			if (!(pcs = check_to_die(pcs, &die, &n_check)))
+				break ;
 	}
- 	check_winer(vm);
+	check_winer(vm);
 }

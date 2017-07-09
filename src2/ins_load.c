@@ -3,17 +3,17 @@
 
 void lld(t_pcs *pcs, t_vm *vm)
 {
-	
-	int p[2] = {0, 0};
+	int p[2]; //= {0, 0};
 	char opc;
 	int pc;
 
+	p[0] = 1;
 	(ops.text & 1) ? printf("lld  -") : 0;
 	pc = pcs->pc;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 1, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
 	if(read_opc(opc, 1) == IND_CODE)
 	{
 		p[0] += pc;
@@ -38,12 +38,13 @@ void ld(t_pcs *pcs, t_vm *vm)
 	char opc;
 	int pc;
 
+	p[0] = 1;
 	(ops.text & 1) ? printf("ld  -") : 0;
 	pc = pcs->pc;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, 1, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
 	if(read_opc(opc, 1) == IND_CODE)
 	{
 		p[0] = pc + p[0] % IDX_MOD;
@@ -68,12 +69,14 @@ void lldi(t_pcs *pcs, t_vm *vm)
 	char opc;
 	int pc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pc = pcs->pc;
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x40, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x40, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	p[0] += p[1] + pc;
@@ -94,13 +97,14 @@ void ldi(t_pcs *pcs, t_vm *vm)
 	char opc;
 	int pc;
 
+	p[0] = 1;
+	p[1] = 2;
 	pc = pcs->pc;
-
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x40, 1, &p[0])) % MEM_SIZE;
-	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, 2, &p[1])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x40, &p[0])) % MEM_SIZE;
+	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	p[0] += p[1];
