@@ -4,7 +4,7 @@
 # include "op.h"
 # include <stdio.h>
 # include <errno.h>
-# include "../ncurses/vizu.h"
+
 
 # define STOP     	"\033[0m"    // \033[0
 # define BOLD      "" // "\033[1m"
@@ -23,7 +23,6 @@
 # define N 4
 # define T 8
 # define V 16
-
 
 
 typedef struct 	s_dt
@@ -77,9 +76,9 @@ typedef struct s_option
 	int n;
 }				t_option;
 
-int nbr_pcs;
-extern t_option ops;
-
+typedef void (*t_ins)(t_pcs*, t_vm*);
+int 	nbr_pcs;
+extern 	t_option ops;
 
 int 	checkops(int option);
 
@@ -123,58 +122,68 @@ void  	zjmp(t_pcs *pcs, t_vm *vm);
 void 	live(t_pcs *pcs , t_vm *vm);
 void 	aff(t_pcs *pcs, t_vm *vm);
 /*
-**tool.c
+** tool.c
 */
 int find_nbmax(t_pcs *pcs);
-t_pcs *place_max(t_pcs *pcs);
-int 	n_pcs(t_pcs *pcs);
+t_pcs 	*place_max(t_pcs *pcs);
+// int 	n_pcs(t_pcs *pcs);
 int 	get_cycles(int rd);
 int 	checkops(int option);
-int is_set(t_dt *dt, int n);
+int 	is_set(t_dt *dt, int n);
+int 	nb_process(t_dt *dt);
+void 	i_color(void);
 /*
-**parse.c
+** parse.c
 */
 int 	check_options(char *arg);
 void 	disp_usage(int error, char *arg);
 t_dt 	*parse_args(int ac, char **av);
+/*
+** man_list.c
+*/
+char		*load_process(t_dt *dt);
+t_pcs  		*new_pcs(int player, int pc, int id, int color);
+void 		cr_pcs_plst(t_dt *dt, t_pcs **pcs, t_pl **pl);
+t_dt  		*new_dt(int fd, int player);
+t_pl  		*new_pl(int player, char *name, int id);
+/*
+** vm.c
+*/
+int			del_pcs(t_pcs *pcs);
+int 		check_alive(t_pcs **pcs);
+t_pcs		*check_to_die(t_pcs *pcs, int *die, int *n_check);
+void		check_winer(t_vm *vm);
 
-//vizu.c
-void vizu_print_mem(unsigned char *buf, size_t size, size_t add);
-void print_cycles(int cycle);
-void print_player(t_pl *pl);
-void print_npcs(int npcs);
-void print_alive(int id, int live);
-void print_die(int die);
-void print_finish(void);
-void print_winner(char *name, int id);
-void blink_pos(int add, unsigned short blink, int color);
+//main.c
+void disp_usage(int error, char *arg);
+
+//tool_.c
+void 	init_ops(t_option *ops);
+int 	is_set(t_dt *dt, int n);
+int 	is_num(char *str);
+unsigned char	*mem_rev(unsigned char *mem, int n);
+void print_mem(char *str, size_t n, int fd);
 
 //get.c
 
-t_dt  *new_dt(int fd, int player);
-char *get_string(int fd, size_t size);
-int get_size(int fd);
+char 	*get_string(int fd, size_t size);
+int 	get_size(int fd);
 char 	*get_prog(int fd, unsigned int size);
 t_dt 	*get_dt(t_dt *dt, int fd);
 
 //chk.c 
 
-unsigned char	*mem_rev(unsigned char *mem, int n);
-int 	chk_magic(int fd);
-
-// main.c
-t_pcs  *new_pcs(int player, int pc, int nb, int color);
-t_pl  	*new_pl(int player, char *name, int id);
+int 			chk_magic(int fd);
 
 // run_pcs.c
 void 	run_pcs(t_pcs *pcs, t_vm *vm);
 
 // debug :
 void disp_dt(t_dt *dt);
-void print_mem(char *str, size_t n, int fd);
 void disp_vm(t_vm *vm);
 void disp_pcs(t_pcs *pcs);
 
 
 typedef void (*t_ins)(t_pcs*, t_vm*);
+# include "../vizu/vizu.h"
 #endif

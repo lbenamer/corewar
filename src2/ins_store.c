@@ -1,48 +1,5 @@
 #include "corewar.h"
 
-void vizu_print_mem(unsigned char *buf, size_t size, size_t add)
-{
-
-	int x;
-	int y;
-	int stx;
-	size_t i;
-
-	getmaxyx(box_ram, y, x);
-	stx = (x - 192) / 2;
-
-	x = (add % 64) * 3 + stx;
-	y = add / 64;
-	i = 0;
-	while(i < size)
-	{
-		mvwprintw(box_ram, y, x, "%.2hhx ", buf[i++]);
-		x += 3;
-		if(x > stx + 190)
-		{
-			++y;
-			x = stx;
-		}
-		y %= 64;
-	}	
-	refresh();
-	wrefresh(box_ram);
-}
-
-
-
-
-void 	vizu_st(int color, unsigned char *buf, size_t size, size_t add)
-{
-
-	wattron(box_ram, COLOR_PAIR(color) | A_BOLD);
-	vizu_print_mem(buf, size, add);
-	wattroff(box_ram, COLOR_PAIR(color) | A_BOLD);
-}
-
-
-
-
 static char 	*store(char *mem, unsigned char *store, size_t size, size_t add)
 {
 	size_t i;
@@ -103,23 +60,3 @@ void	sti(t_pcs *pcs, t_vm *vm)
 	(ops.text & 1) ? printf("(with pc and mod: %d)",  p[1]) : 0;
 	(ops.text & 1) ? printf("\n") : 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

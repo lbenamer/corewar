@@ -1,20 +1,5 @@
 #include "corewar.h"
 
-t_dt  *new_dt(int fd, int player)
-{
-	t_dt *dt;
-
-	dt = (t_dt*)ft_memalloc(sizeof(t_dt));
-	dt->name = get_string(fd, PROG_NAME_LENGTH + 4);
-	dt->size = (unsigned int)get_size(fd);
-	dt->com = get_string(fd, COMMENT_LENGTH + 4);
-	dt->prog = get_prog(fd, dt->size);
-	dt->player = player;
-	dt->next = NULL;
-	dt->prev = NULL;
-	return (dt); 
-}
-
 char *get_string(int fd, size_t size)
 {
 	char *string;

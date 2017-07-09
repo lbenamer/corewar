@@ -28,7 +28,13 @@ SRCS    =	src2/main.c \
 			src2/tool.c \
 			src2/load_param.c \
 			src2/parse.c \
-			ncurses/create_win.c 
+			src2/tool_.c \
+			src2/man_list.c \
+			vizu/create_win.c \
+			vizu/launch.c \
+			vizu/print.c  \
+			vizu/print_.c \
+			src2/vm.c
 
 OBJS    =   $(SRCS:.c=.o)
 

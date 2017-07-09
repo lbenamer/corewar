@@ -1,31 +1,5 @@
 #include "corewar.h"
 
-void disp_usage(int error, char *arg)
-{
-	// ft_printf(YELLOW);
-	if(error == -1)
-		ft_printf("illegal option : %s\n", arg);
-	if(error == -2)
-		ft_printf("illegal player id : %s\n", arg);
-	if(error == -3)
-		ft_printf("illegal dump number : %s\n", arg);
-	if(error == -4)
-		ft_printf("illegal Text mode : %s\n", arg);
-	ft_printf("./corewar [ -d N | -l | -t N | -v ] | [ -n N ] </path/champ.cor> <...>\n");
-	ft_printf(" -d : Dumps memory after N cycles then exits \n");
-	ft_printf(" -l : Show lives \n");
-	ft_printf(" -n : Choose player id (N) Manual mode \n");
-	ft_printf(" -t : Text mode (N) \n");
-	ft_printf("      ---> N : 1 show instruction\n");
-	ft_printf("      ---> N : 2 show cycles\n");
-	ft_printf("      ---> N : 4 show death\n");
-	ft_printf("      ---> N : 8 show cycles_to_die\n");
-	ft_printf("      ---> N : 16 show lives (-l)\n");
-	ft_printf(" -v : visual mode\n");
-	// ft_printf(STOP);
-	exit(0);
-}
-
 void	activ_ops(char *arg)
 {
 	arg[1] == 'd' ? ops.all += D : 0;
@@ -34,8 +8,6 @@ void	activ_ops(char *arg)
 	arg[1] == 't' ? ops.all += T : 0;
 	arg[1] == 'v' ? ops.all += V : 0;
 }
-
-//void activ_text_ops(char *arg);
 
 
 int 	check_options(char *arg)
@@ -66,33 +38,6 @@ t_dt *check_data(t_dt *dt, char *arg)
 	return (dt);
 }
 
-int is_set(t_dt *dt, int n)
-{
-	t_dt *tmp;
-	tmp = dt;
-	while(tmp)
-	{
-		if(tmp->player == n)
-			return (1);
-		tmp = tmp->next;
-	}
-	return (0);
-}
-
-int is_num(char *str)
-{
-	int i;
-
-	i = 0;
-
-	while(str[i] == ' ')
-		++i;
-	(str[0] == '-' || str[0] == '+') ? ++i : 0;
-	while(str[i])
-		if(!ft_isdigit(str[i++]))
-			return (0);
-	return (1);
-}
 
 void parse(int ac, char ** av, int i, t_dt **dt)
 {
