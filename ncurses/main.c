@@ -12,9 +12,9 @@
 // 	WIN_BORDER border;
 // }WIN;
 
-void init_win_params(WIN *p_win);
-void print_win_params(WIN *p_win);
-void create_box(WIN *win, bool flag);
+// void init_win_params(WIN *p_win);
+// void print_win_params(WIN *p_win);
+// void create_box(WIN *win, bool flag);
 
 int main(int argc, char *argv[])
 {	WINDOW win;

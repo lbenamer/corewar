@@ -132,5 +132,10 @@ t_dt *parse_args(int ac, char **av)
 	i = 0;
 	dt = NULL;
  	parse(ac, av, i, &dt);
+ 	if(ops.all & V)
+ 	{
+ 		launch_vizu();
+ 		refresh();
+ 	}
 	return (dt);
 }

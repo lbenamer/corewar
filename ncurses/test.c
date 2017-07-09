@@ -4,6 +4,7 @@
 
 
 #include <ncurses.h>
+typedef struct _win_st WIN;
 
 // typedef struct _win_border_struct {
 // 	chtype 	ls, rs, ts, bs, 
@@ -29,9 +30,9 @@ typedef struct s_win{
 // void print_win_params(t_win *p_win);
 // void create_box(t_win *win, bool flag);
 
-// WINDOW cr_win_type(void)
+// WIN cr_win_type(void)
 // {
-// 	WINDOW *win;
+// 	WIN *win;
 
 // 	win->height = 0;
 // 	win->width = 0;
@@ -52,7 +53,7 @@ typedef struct s_win{
 // }
 
 
-// void print_win(WINDOW *win)
+// void print_win(WIN *win)
 // {
 
 // 	mvaddch(win->starty, win->startx, win->border.tl);    						//ajout des coins avc mvaddch
@@ -74,15 +75,15 @@ typedef struct s_win{
 int main(int argc, char **argv)
 {
 
-	WINDOW *box_vm;
-	WINDOW *box_ram;
-	WINDOW *box_title;
+	WIN *box_vm;
+	WIN *box_ram;
+	WIN *box_title;
 	
 	t_win 	vm;
 	t_win 	ram;
 	t_win title;
 
-	// WINDOW *title;
+	// WIN *title;
 
 	int hd;
 	char *line;
@@ -117,7 +118,7 @@ int main(int argc, char **argv)
 	ram.startx = 3;
 	ram.starty = LINES / 8 + 2;
 
-	refresh();
+	// refresh();
 	box_ram = newwin(ram.height, ram.width, ram.starty ,ram.startx);
 	box_vm = newwin(vm.height, vm.width, vm.starty, vm.startx);
 	box_title = newwin(title.height, title.width, title.starty, title.startx);
@@ -151,16 +152,13 @@ int main(int argc, char **argv)
 	int cycles = 0;
 	getmaxyx(box_vm, y , x);
 	wattron(box_vm, A_BOLD);
-	mvwprintw(box_vm,  1,  4 , "Cycles : %d ", cycles);
-	mvwprintw(box_vm, 2 ,  4 , "Cycles to die : %d ", cycles);
+	mvwprintw(box_vm, i ,  4 , "Cycles : %d ", cycles);
 	wattroff(box_vm, A_BOLD);
 	wrefresh(box_vm);
 
 	int ch;
 	while((ch = getch()) == 0)
-
-
-	 	
+		;
 	 endwin();
 	return 0;
 }

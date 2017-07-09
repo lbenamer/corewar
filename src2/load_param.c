@@ -5,8 +5,9 @@ short 	get_short(char *ram, size_t add)
 {
 	short ret = 0x0000;
 
-	ret += (0x00 | (unsigned char)ram[(add + 1) % MEM_SIZE]);
-	ret += (0x00 | (unsigned char)ram[add % MEM_SIZE] ) << 8;
+	add &= 0x0fff;
+	ret += (0x00 | (unsigned char)ram[(add + 1) & 0x0fff]);
+	ret += (0x00 | (unsigned char)ram[add & 0x0fff] ) << 8;
 	return (ret);
 }
 
@@ -15,10 +16,11 @@ int get_int(char *ram, size_t add)
 	int ret;
 
 	ret = 0x00000000;
-	ret = (ret | (unsigned char)ram[(add + 3) % MEM_SIZE]);
-	ret += ((0x00 |  (unsigned char)ram[(add + 2) % MEM_SIZE]) << 8);
-	ret += (0x00 | (unsigned char)ram[(add + 1) % MEM_SIZE]) << 16;
-	ret += (0x00 | (unsigned char)ram[add % MEM_SIZE]) << 24;	
+	add &= 0x0fff;
+	ret = (ret | (unsigned char)ram[(add + 3) & 0x0fff]);
+	ret += ((0x00 |  (unsigned char)ram[(add + 2) & 0x0fff]) << 8);
+	ret += (0x00 | (unsigned char)ram[(add + 1) & 0x0fff]) << 16;
+	ret += (0x00 | (unsigned char)ram[add & 0x0fff]) << 24;	
 	return (ret);
 }
 

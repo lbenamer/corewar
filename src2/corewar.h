@@ -4,13 +4,14 @@
 # include "op.h"
 # include <stdio.h>
 # include <errno.h>
+# include "../ncurses/vizu.h"
 
 # define STOP     	"\033[0m"    // \033[0
 # define BOLD      "" // "\033[1m"
 # define ITALIC    "" // "\033[3m"
 # define UNDERLINE "" // "\033[4m"
 # define BLACK   	"" //"\033[30m"
-# define RED     "" //	"\033[31m"
+# define RED     "\033[31m"
 # define GREEN   	"\033[32m"
 # define YELLOW     "\033[33m"
 # define BLUE   	"" //"\033[34m"
@@ -39,23 +40,23 @@ typedef struct 	s_dt
 typedef struct s_pcs
 {
 	unsigned short 	pc;
-	char 	carry;
-	int 	*r;
-	int 	id;
-	int 	cycle;
-	int 	alive;
-	// char 	*name;
-	// int 	player;
-	struct s_pcs *next;
-	struct s_pcs *prev;
+	char 			carry;
+	int 			*r;
+	int 			id;
+	int 			cycle;
+	int 			alive;
+	int 			color;
+	struct s_pcs 	*next;
+	struct s_pcs 	*prev;
 }				t_pcs;
 
 typedef struct s_pl
 {
-	char *name;
-	int player;
-	unsigned long live;
-	struct s_pl *next;
+	char 			*name;
+	int 			player;
+	unsigned long 	live;
+	int 			id;
+	struct s_pl 	*next;
 }				t_pl;
 
 
@@ -76,7 +77,9 @@ typedef struct s_option
 	int n;
 }				t_option;
 
+int nbr_pcs;
 extern t_option ops;
+
 
 int 	checkops(int option);
 
@@ -135,7 +138,16 @@ int 	check_options(char *arg);
 void 	disp_usage(int error, char *arg);
 t_dt 	*parse_args(int ac, char **av);
 
-
+//vizu.c
+void vizu_print_mem(unsigned char *buf, size_t size, size_t add);
+void print_cycles(int cycle);
+void print_player(t_pl *pl);
+void print_npcs(int npcs);
+void print_alive(int id, int live);
+void print_die(int die);
+void print_finish(void);
+void print_winner(char *name, int id);
+void blink_pos(int add, unsigned short blink, int color);
 
 //get.c
 
@@ -151,8 +163,8 @@ unsigned char	*mem_rev(unsigned char *mem, int n);
 int 	chk_magic(int fd);
 
 // main.c
-t_pcs  *new_pcs(int player, int pc, int nb);
-t_pl  	*new_pl(int player, char *name);
+t_pcs  *new_pcs(int player, int pc, int nb, int color);
+t_pl  	*new_pl(int player, char *name, int id);
 
 // run_pcs.c
 void 	run_pcs(t_pcs *pcs, t_vm *vm);

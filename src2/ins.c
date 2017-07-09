@@ -5,7 +5,7 @@ void	aff(t_pcs *pcs, t_vm *vm)
 
 	int p;
 	p = vm->ram[pcs->pc + 1];
-	pcs->pc += 2;
+	pcs->pc += 3;
 
 }
 
@@ -13,17 +13,20 @@ void 	zjmp(t_pcs *pcs, t_vm *vm)
 {
  	(ops.text & 1) ? printf("zjmp -") : 0;
 	short p;
-	p = get_short(vm->ram , pcs->pc + 1);
+	int pc;
+
+	pc = pcs->pc;
+	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
+	p = get_short(vm->ram , pcs->pc);
 	if(pcs->carry)
 	{
-		p %= MEM_SIZE;
-		pcs->pc = pcs->pc + p % IDX_MOD;
+		pcs->pc = pc + p % IDX_MOD;
 		pcs->pc &= 0xfff;
 		(ops.text & 1) ? printf(" %d OK :)",p) : 0;
 	}
 	else
 	{
-		pcs->pc += 3;
+		pcs->pc += 2;
 		(ops.text & 1) ? printf("%d FAILED :(", p) : 0;
 	}
 	(ops.text & 1) ? printf("\n") : 0;
@@ -36,10 +39,11 @@ void	live(t_pcs *pcs , t_vm *vm)
 	int p;
 	t_pl *tmp;
 
-	p = get_int(vm->ram, 1 + pcs->pc);
+	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
+	p = get_int(vm->ram, pcs->pc);
 	(ops.text & 1) ? printf(" %d," , p) : 0;
 	tmp = vm->plst;
-	pcs->pc += 5;
+	pcs->pc += 4;
 	while(tmp)
 	{
 		if(tmp->player == p)
@@ -47,6 +51,7 @@ void	live(t_pcs *pcs , t_vm *vm)
 			++tmp->live;
 			vm->last_live = p;
 		 	(ops.all & L) ? printf("joueur %s : [p %d] IS ALIVE \n", tmp->name, p) : 0;
+		 	ops.all & V ? print_alive(tmp->id, tmp->live) : 0;
 			break ;
 		}
 		tmp = tmp->next;

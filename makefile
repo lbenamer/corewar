@@ -13,7 +13,7 @@
 CC      =   gcc
 RM      =   rm -f
 CFLAGS  =  -Wall -Werror -Wextra
-LIB		=	-L./libft -lft
+LIB		=	-L./libft -lft -lncurses
 NAME    =   cor
 SRCS    =	src2/main.c \
 			src2/get.c \
@@ -28,6 +28,7 @@ SRCS    =	src2/main.c \
 			src2/tool.c \
 			src2/load_param.c \
 			src2/parse.c \
+			ncurses/create_win.c 
 
 OBJS    =   $(SRCS:.c=.o)
 

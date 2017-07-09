@@ -62,7 +62,8 @@ t_dt 	*get_dt(t_dt *dt, int fd)
 	if(!dt)
 	{
 		dt = checkops(N) ? new_dt(fd, ops.n) : new_dt(fd, n);
-		printf("Player: [ %d ] - Size : %d oct - Name: %s -> %s \n",dt->player, dt->size, dt->name, dt->com);
+		if(!checkops(V))
+			printf("Player: [ %d ] - Size : %d oct - Name: %s -> %s \n",dt->player, dt->size, dt->name, dt->com);
 	}
 	else
 	{
@@ -72,8 +73,9 @@ t_dt 	*get_dt(t_dt *dt, int fd)
 		while(tmp->next)
 			tmp = tmp->next;
 		tmp->next = checkops(N) ? new_dt(fd, ops.n) : new_dt(fd, n);
-		printf("Player: [ %d ] - Size : %d oct - Name: %s -> %s \n",
-			tmp->next->player, tmp->next->size, tmp->next->name, tmp->next->com);
+		if(!checkops(V))
+			printf("Player: [ %d ] - Size : %d oct - Name: %s -> %s \n",
+		tmp->next->player, tmp->next->size, tmp->next->name, tmp->next->com);
 		tmp->next->prev = tmp;
 	}
 	return (dt);

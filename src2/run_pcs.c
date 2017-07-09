@@ -29,6 +29,7 @@ void disp_vm(t_vm *vm)
 int	del_pcs(t_pcs *pcs)
 {
 	(ops.text & 4) ? printf("Process %d has been destroyed\n", pcs->id) : 0;
+	nbr_pcs -= 1;
 	free(pcs->r);
 	free(pcs);
 	if(!pcs->next && !pcs->prev)
@@ -52,6 +53,7 @@ int	del_pcs(t_pcs *pcs)
 		pcs->next->prev = pcs->prev;
 		pcs = pcs->prev;
 	}
+	ops.all & V ? print_npcs(nbr_pcs) : 0;
 	return (1);
 }
 
@@ -98,12 +100,14 @@ t_pcs  *check_to_die(t_pcs *pcs, int *die, int *n_check)
 	{	
 		cycle_to_die -= CYCLE_DELTA;
 		*die = cycle_to_die;
+		ops.all & V ? print_die(*die) : 0;
 		*n_check = 0;
 	}
 	else if(*n_check == MAX_CHECKS)
 	{
 			cycle_to_die -= CYCLE_DELTA;
 			*die = cycle_to_die;
+			ops.all & V ? print_die(*die) : 0;
 			*n_check = 0;
 	}
 	else
@@ -123,6 +127,7 @@ void	check_winer(t_vm *vm)
 	{
 		if(pl->player == vm->last_live)
 		{
+			ops.all & V ? print_winner(pl->name, pl->id) : 
 			printf(GREEN"Player %s [ %d ] Won The Game\n"STOP, pl->name, pl->player);
 			break;
 		}
@@ -136,13 +141,15 @@ void 	clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
  	unsigned short lx;
  	while(pcs)
 	{
-	 	pcs->pc %= 0x0fff;
+	 	pcs->pc %= MEM_SIZE;
 	 	lx =  vm->ram[pcs->pc];
+	 	(ops.text & 1) ? printf(RED"P  %5d | pc = %d | lx = %d \n"STOP, pcs->id, pcs->pc, lx) : 0;
 	 	if(lx > 0 && lx < 17)
 		{	
 			if(get_cycles(lx)  == pcs->cycle)
 			{
-				(ops.text & 1) ? printf("P  %5d | ", pcs->id) : 0;
+				ops.all & V ? blink_pos(pcs->pc, lx, pcs->color) : 0;
+				(ops.text & 1) ? printf("P  %5d | pc = %d | ", pcs->id, pcs->pc) : 0;
 				ins[lx](pcs, vm);
 				pcs->cycle = 1;
 			}
@@ -186,6 +193,7 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 	t_ins *tb_ins;
 	int n_check;
 	int die;
+	int ch;
 	 
 	die = CYCLE_TO_DIE + 1;
 	n_check = 0;
@@ -196,11 +204,14 @@ void 	run_pcs(t_pcs *pcs, t_vm *vm)
 	pcs = place_max(pcs);
 	while(++vm->cycles && --die >= 0)
 	{
+		ch = 0;
 		if(ops.dump && vm->cycles == ops.dump + 1)
 				return ;
 		(ops.text & 2) ? printf("its now cycle : %d\n", vm->cycles) : 0;
+		ops.all & V ? print_cycles(vm->cycles) : 0;
 	 	tmp = pcs;
 	 	clock(pcs, vm, tb_ins);
+	 	ops.all & V ? usleep(500) : 0;
 	 	pcs = place_max(tmp);
 	 	if(!die && ++n_check)
 	 		if(!(pcs = check_to_die(pcs, &die, &n_check)))
