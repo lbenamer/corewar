@@ -12,7 +12,7 @@
 # define UNDERLINE "" // "\033[4m"
 # define BLACK   	"" //"\033[30m"
 # define RED     "\033[31m"
-# define GREEN   	"\033[32m"
+# define GREEN   	"\033[32m"    //32
 # define YELLOW     "\033[33m"
 # define BLUE   	"" //"\033[34m"
 # define MAGENTA 	"" //"\033[35m"
@@ -23,7 +23,6 @@
 # define N 4
 # define T 8
 # define V 16
-
 
 typedef struct 	s_dt
 {
@@ -75,10 +74,11 @@ typedef struct s_option
 	int dump;
 	int n;
 }				t_option;
-
 typedef void (*t_ins)(t_pcs*, t_vm*);
-int 	nbr_pcs;
-extern 	t_option ops;
+
+int 		nbr_pcs;
+t_option 	ops;
+char 		**g_av;
 
 int 	checkops(int option);
 
@@ -156,6 +156,7 @@ void		check_winer(t_vm *vm);
 
 //main.c
 void disp_usage(int error, char *arg);
+void 	disp_player(t_dt *dt);
 
 //tool_.c
 void 	init_ops(t_option *ops);

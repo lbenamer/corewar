@@ -14,24 +14,26 @@
 
 size_t		ft_strlcat(char *dst, const char *src, size_t size)
 {
-	size_t	i;
-	size_t	d;
-	size_t	s;
-	size_t	n;
+	// size_t	i;
+	// size_t	d;
+	// size_t	s;
+	// size_t	n;
 
-	i = 0;
-	s = ft_strlen(src);
-	d = ft_strlen(dst);
-	if (size > d)
-	{
-		n = size - d - 1;
-		while (i < n && src[i])
-		{
-			dst[d + i] = src[i];
-			i++;
-		}
-		dst[d + i] = '\0';
-		return (d + s);
-	}
-	return (size + s);
+	// i = 0;
+	// s = ft_strlen(src);
+	// d = ft_strlen(dst);
+	// if (size > d)
+	// {
+	// 	n = size - d - 1;
+	// 	while (i < n && src[i])
+	// 	{
+	// 		dst[d + i] = src[i];
+	// 		i++;
+	// 	}
+	// 	dst[d + i] = '\0';
+	// 	return (d + s);
+	// }
+	// return (size + s);
+	ft_strncat(dst, src, ft_strlen_p(dst) - size - 1);
+	return(ft_strlen_p(dst) + ft_strlen_p(src));
 }

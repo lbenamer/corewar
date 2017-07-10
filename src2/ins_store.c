@@ -26,10 +26,10 @@ void st(t_pcs *pcs, t_vm *vm)
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, 0x40, &p[0])) % MEM_SIZE;
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, &p[1])) % MEM_SIZE;
-	p[1] = pc + (p[1] % IDX_MOD);
-	p[1] %=  MEM_SIZE;
+	p[1] = (pc + (p[1] % IDX_MOD)) & 0x0fff;
 	buf = (unsigned char *) & p[0];
 	buf = mem_rev(buf, 4);
+	(ops.text & 1) ? printf("(with pc and mod: %d)",  p[1]) : 0;
 	store(vm->ram, buf, 4, p[1]);
 	if(ops.all & V)
 		vizu_st(pcs->color, buf, 4, p[1]);
@@ -55,8 +55,8 @@ void	sti(t_pcs *pcs, t_vm *vm)
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, &p[1])) % MEM_SIZE;
 	pcs->pc = (pcs->pc + load_param(pcs ,vm->ram, opc | 0x04, &p[2])) % MEM_SIZE;
 	(ops.text & 1) ? printf("\n         | -> store to: %d + %d = %d ", p[1], p[2], p[1] + p[2]) : 0;
-	p[1] = pc + ((p[1] + p[2]) % IDX_MOD);
-	p[1] %= MEM_SIZE; // change
+	p[1] = (pc + ((p[1] + p[2]) % IDX_MOD)) & 0x0fff;
+	// p[1] %= MEM_SIZE; // change
 	buf = (unsigned char *) & p[0];
 	buf = mem_rev(buf, 4);
 	store(vm->ram, buf, 4, p[1]);

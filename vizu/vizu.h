@@ -48,4 +48,5 @@ void						blink_pos(int add, unsigned short blink, int color);
 void						vizu_print_mem(unsigned char *buf, size_t size, size_t add);
 void 						vizu_print_pgm(t_dt *dt);
 void 						vizu_st(int color, unsigned char *buf, size_t size, size_t add);
+void 						reverse(int add , unsigned short blink, int color);
 #endif

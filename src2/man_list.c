@@ -86,7 +86,10 @@ t_pl  	*new_pl(int player, char *name, int id)
 t_dt  *new_dt(int fd, int player)
 {
 	t_dt *dt;
+	static int max = 0;
 
+	++max;
+	max > 4 ? disp_usage(-8, *g_av) : 0;
 	dt = (t_dt*)ft_memalloc(sizeof(t_dt));
 	dt->name = get_string(fd, PROG_NAME_LENGTH + 4);
 	dt->size = (unsigned int)get_size(fd);

@@ -20,8 +20,8 @@ void 	zjmp(t_pcs *pcs, t_vm *vm)
 	p = get_short(vm->ram , pcs->pc);
 	if(pcs->carry)
 	{
-		pcs->pc = pc + p % IDX_MOD;
-		pcs->pc &= 0xfff;
+		pcs->pc = (pc + p % IDX_MOD) & 0x0fff;
+		// pcs->pc &= 0xfff;
 		(ops.text & 1) ? printf(" %d OK :)",p) : 0;
 	}
 	else

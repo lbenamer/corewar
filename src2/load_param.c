@@ -17,7 +17,7 @@ int			get_int(char *ram, size_t add)
 
 	ret = 0x00000000;
 	add &= 0x0fff;
-	ret = (ret | (unsigned char)ram[(add + 3) & 0x0fff]);
+	ret = (ret | (unsigned char)ram[(add + 3) % MEM_SIZE]);
 	ret += ((0x00 |  (unsigned char)ram[(add + 2) & 0x0fff]) << 8);
 	ret += (0x00 | (unsigned char)ram[(add + 1) & 0x0fff]) << 16;
 	ret += (0x00 | (unsigned char)ram[add & 0x0fff]) << 24;	

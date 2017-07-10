@@ -31,7 +31,6 @@ int check_alive(t_pcs **pcs)
 	return (total);
 }
 
-
 t_pcs  *check_to_die(t_pcs *pcs, int *die, int *n_check)
 {
 	static int 	cycle_to_die = CYCLE_TO_DIE;
@@ -108,4 +107,3 @@ int	del_pcs(t_pcs *pcs)
 	ops.all & V ? print_npcs(nbr_pcs) : 0;
 	return (1);
 }
-

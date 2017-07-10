@@ -5,18 +5,9 @@
 int main(int argc, char const *argv[])
 {
 
-	int val;
+	char *var = "ol";
 
-	val = atoi(argv[1]);
-
-	int a = val;
-	int b = val;
-
-	a &= 0x0fff;
-	b %= 4096;
-
-	printf("a = %d\n", a);
-	printf("b = %d\n", b);
+	printf("size of var = %lu\n", sizeof(var));
 
 	return 0;
 }

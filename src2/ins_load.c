@@ -16,8 +16,8 @@ void lld(t_pcs *pcs, t_vm *vm)
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
 	if(read_opc(opc, 1) == IND_CODE)
 	{
-		p[0] += pc;
-		p[0] %= MEM_SIZE;
+		p[0] = (p[0] + pc) & 0x0fff;
+		// sp[0] %= MEM_SIZE;
 		p[0] = get_int(vm->ram, p[0]);
 	}
 	p[1] = vm->ram[pcs->pc] - 1;
@@ -47,8 +47,8 @@ void ld(t_pcs *pcs, t_vm *vm)
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
 	if(read_opc(opc, 1) == IND_CODE)
 	{
-		p[0] = pc + p[0] % IDX_MOD;
-		p[0] %= MEM_SIZE;
+		p[0] = (pc + p[0] % IDX_MOD) & 0x0fff;
+		// p[0] %= MEM_SIZE;
 		p[0] = get_int(vm->ram, p[0]);
 	}
 	p[1] = vm->ram[pcs->pc] - 1;
@@ -79,8 +79,8 @@ void lldi(t_pcs *pcs, t_vm *vm)
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc | 0x10, &p[1])) % MEM_SIZE;
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
-	p[0] += p[1] + pc;
-	p[0] %= MEM_SIZE;
+	p[0] = (p[0] + p[1] + pc) & 0x0fff;
+	// p[0] %= MEM_SIZE;
 	(ops.text & 1) ? printf("with pc and mod %d," , p[0]) : 0;
 	p[0] =  get_int(vm->ram, p[0]);
 	pcs->r[p[2]] = p[0];
@@ -108,8 +108,8 @@ void ldi(t_pcs *pcs, t_vm *vm)
 	p[2] = vm->ram[pcs->pc] - 1;
 	p[2] &= 0xf;
 	p[0] += p[1];
-	p[0] = pc + p[0] % IDX_MOD;
-	p[0] %= MEM_SIZE;
+	p[0] = (pc + p[0] % IDX_MOD) & 0x0fff;
+	// p[0] %= MEM_SIZE;
 	(ops.text & 1) ? printf("with pc and mod %d," , p[0]) : 0;
 	p[0] =  get_int(vm->ram, p[0]);
 	pcs->r[p[2]] = p[0];

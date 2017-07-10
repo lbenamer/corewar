@@ -41,8 +41,8 @@ void myfork(t_pcs *pcs, t_vm *vm)
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	p = get_short(vm->ram, pcs->pc);
 	(ops.text & 1) ? printf(" %d," , p) : 0;
-	p = pc + p % IDX_MOD;
-	p %= MEM_SIZE;
+	p = (pc + p % IDX_MOD) & 0x0fff;
+	// p %= MEM_SIZE;
 	(ops.text & 1) ? printf(" with pc and mod : %d ", p) : 0;
 	tmp = place_max(pcs);
 	new = new_fork(pcs, tmp->id + 1, p);
@@ -65,8 +65,8 @@ void lfork(t_pcs *pcs, t_vm *vm)
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	p = get_short(vm->ram, pcs->pc);
 	(ops.text & 1) ? printf(" %d," , p) : 0;
-	p = pc + p;
-	p %= MEM_SIZE;
+	p = (pc + p) & 0x0fff;
+	// p %= MEM_SIZE;
 	(ops.text & 1) ? printf(" with pc and mod : %d ", p) : 0;
 	tmp = place_max(pcs);
 	new = new_fork(pcs, tmp->id + 1, p);
