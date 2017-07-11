@@ -12,6 +12,15 @@
 
 #include "corewar.h"
 
+void free_all_pcs(t_pcs *pcs)
+ {
+	ops.text &= 0xfb;
+	while(pcs)
+		pcs = del_pcs(pcs);
+}
+
+
+
 static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 {
 	unsigned short lx;
@@ -20,7 +29,7 @@ static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 	{
 		pcs->pc &= 0x0fff;
 		lx = vm->ram[pcs->pc];
-		// ops.all & V ? blink_pos(pcs->pc, lx, pcs->color) : 0;
+		ops.all & V ? blink_pos(pcs->pc, lx, pcs->color) : 0;
 		if (lx > 0 && lx < 17)
 		{
 			ops.all & V ? reverse(pcs->pc, lx, pcs->color) : 0;
@@ -66,7 +75,6 @@ static	void		init_ins(t_ins *ins)
 
 void				run_pcs(t_pcs *pcs, t_vm *vm)
 {
-	t_pcs	*tmp;
 	t_ins	*tb_ins;
 	int		n_check;
 	int		die;
@@ -78,19 +86,18 @@ void				run_pcs(t_pcs *pcs, t_vm *vm)
 	pcs = place_max(pcs);
 	while (++vm->cycles && --die >= 0)
 	{
-		// printf("cycle %d\n", vm->cycles);
 		if (ops.dump && vm->cycles == ops.dump + 1)
 			return ;
 		(ops.text & 2) ? printf("its now cycle : %d\n", vm->cycles) : 0;
 		ops.all & V ? print_cycles(vm->cycles) : 0;
-		tmp = pcs;
 		clock(pcs, vm, tb_ins);
-		usleep(300);
-		//ops.all & V ? usleep(50) : 0;
-		pcs = place_max(tmp);
+		pcs = place_max(pcs);
 		if (!die && ++n_check)
 			if (!(pcs = check_to_die(pcs, &die, &n_check)))
 				break ;
 	}
+	free(tb_ins);
+	// while(1);
+	free_all_pcs(pcs);
 	check_winer(vm);
 }

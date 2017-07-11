@@ -37,15 +37,15 @@ typedef struct 	s_dt
 
 typedef struct s_pcs
 {
-	unsigned short 	pc;
-	char 			carry;
+	struct s_pcs 	*next;
+	struct s_pcs 	*prev;
+	int 			color;
 	int 			*r;
 	int 			id;
 	int 			cycle;
 	int 			alive;
-	int 			color;
-	struct s_pcs 	*next;
-	struct s_pcs 	*prev;
+	unsigned short 	pc;
+	char 			carry;
 }				t_pcs;
 
 typedef struct s_pl
@@ -149,8 +149,8 @@ t_pl  		*new_pl(int player, char *name, int id);
 /*
 ** vm.c
 */
-int			del_pcs(t_pcs *pcs);
-int 		check_alive(t_pcs **pcs);
+t_pcs 		*del_pcs(t_pcs *pcs);
+t_pcs 		*check_alive(t_pcs *pcs, int *total);
 t_pcs		*check_to_die(t_pcs *pcs, int *die, int *n_check);
 void		check_winer(t_vm *vm);
 

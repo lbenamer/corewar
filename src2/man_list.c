@@ -25,7 +25,7 @@ t_pcs  *new_pcs(int player, int pc, int id, int color)
 	t_pcs *pcs;
 
 	pcs = (t_pcs*)ft_memalloc(sizeof(t_pcs));
-	pcs->r = (int*)ft_memalloc(sizeof(int) * 17);
+	pcs->r = (int*)ft_memalloc(sizeof(int) * 16);
 	pcs->r[0] = player;
 	pcs->color = color;
 	pcs->id = id;
@@ -42,7 +42,6 @@ void cr_pcs_plst(t_dt *dt, t_pcs **pcs, t_pl **pl)
 {
 	t_pcs *tmp;
 	t_pl *tmp_pl;
-	// t_pcs *pcs;
 	int pc;
 	int id;
 	int color;
@@ -52,7 +51,7 @@ void cr_pcs_plst(t_dt *dt, t_pcs **pcs, t_pl **pl)
 	id = 1;
 	n_pcs = nb_process(dt);
 	pc = MEM_SIZE / n_pcs;
-	*pcs = new_pcs(dt->player, 0, id, color);
+	*pcs = new_pcs(dt->player, 0, id, id);
 	*pl = new_pl(dt->player, dt->name, id);
 	tmp = *pcs;
 	tmp_pl = *pl;
@@ -60,7 +59,7 @@ void cr_pcs_plst(t_dt *dt, t_pcs **pcs, t_pl **pl)
 	while(dt)
 	{
 		tmp_pl->next = new_pl(dt->player, dt->name, ++id);
-		tmp->next = new_pcs(dt->player, pc, id, ++color);
+		tmp->next = new_pcs(dt->player, pc, id, id);
 		tmp->next->prev = tmp;
 		tmp = tmp->next;
 		tmp_pl = tmp_pl->next;
@@ -100,10 +99,3 @@ t_dt  *new_dt(int fd, int player)
 	dt->prev = NULL;
 	return (dt); 
 }
-
-
-
-
-
-
-

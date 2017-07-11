@@ -12,16 +12,27 @@ void print_title(WIN *win)
 	i = 0;
 	wattron(win, COLOR_PAIR(1));
 	hd = open("header_m42.txt", O_RDONLY);
-	header = (char **)ft_memalloc(sizeof(char *) * 0x10);
+	header = (char **)ft_memalloc(sizeof(char *) * 5);
 	while(get_next_line(hd, &line) > 0)
+	{
 		header[i++] = ft_strdup(line);
+		ft_strdel(&line);
+	}
+	ft_strdel(&line);
 	getmaxyx(win, y, x);
 	i = -1;
+	
 	while(header[++i])
+	{
 	 	mvwprintw(win, i ,  x / 2 - (ft_strlen(header[i]) / 2), "%s", header[i]);
-	 refresh();
-	 wrefresh(win);
-	 wattroff(win, COLOR_PAIR(1));
+	 	ft_strdel(&header[i]);
+	}
+	
+	free(header);
+	
+	refresh();
+	wrefresh(win);
+	wattroff(win, COLOR_PAIR(1));
 }
 
 WIN  *create_box(t_win init, int bd)

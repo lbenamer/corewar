@@ -49,12 +49,12 @@ void blink_pos(int add, unsigned short blink, int color)
 	mvwprintw(box_ram, y, x, "%.2hhx", blink);
 	wattroff(box_ram, A_DIM | COLOR_PAIR(color) | A_REVERSE) ;
 	refresh();
-	wrefresh(box_ram);
+	// wrefresh(box_ram);
 	wattron(box_ram, COLOR_PAIR(color) | A_BOLD);
 	mvwprintw(box_ram, y, x, "%.2hhx", blink);
-	wattroff(box_ram, A_DIM | COLOR_PAIR(color) | A_BOLD) ;
+	wattroff(box_ram, COLOR_PAIR(color) | A_BOLD) ;
 	refresh();
-	wrefresh(box_ram);
+	// wrefresh(box_ram);
 }
 
 void vizu_print_pgm(t_dt *dt)

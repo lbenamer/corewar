@@ -58,36 +58,37 @@ int main(int ac, char **av)
 {
 	t_dt 	*dt;
 	t_vm 	vm;
-	int 	ch;
 	
 	if(ac == 1)
 			disp_usage(0, NULL);
-
 	g_av = av;
-	//++g_av;
 	nbr_pcs = 0;
 	init_ops(&ops);
 	init_t_vm(&vm);
-	t_pcs *pcs = NULL; 		//(t_pcs*)ft_memalloc(sizeof(t_pcs));
-	vm.plst =  NULL;  		//(t_pl*)ft_memalloc(sizeof(t_pl));
+	t_pcs *pcs = NULL;
 	if(!(dt = parse_args(ac, av)))
 		disp_usage(0, NULL);
 	vm.ram = load_process(dt);
-	(ops.all & V) ? vizu_print_pgm(dt) : 0;
  	cr_pcs_plst(dt, &pcs, &vm.plst);
- 	ops.all & V ? print_player(vm.plst) : 0;
- 	ops.all & V ? print_npcs(nbr_pcs) : 0; 
- 	while(getch() == 0)
-		;
-	del_usage();
+ 	if(ops.all & V)
+ 	{
+		vizu_print_pgm(dt);
+ 		print_player(vm.plst);
+ 		print_npcs(nbr_pcs); 
+ 		while(getch() == 0)
+			;
+		del_usage();
+		refresh();
+ 	}
 	run_pcs(pcs, &vm);
-	ops.dump && !checkops(V) ? print_mem(vm.ram, MEM_SIZE, 1) : 0;
-	print_finish();
-	refresh();
-	ch = 0;
-	while(!ch)
-		ch = getch();
-		
-	endwin();
+	ops.dump && !checkops(V) ? print_mem(vm.ram, MEM_SIZE, 1) : 0;	
+	if(ops.all & V)
+	{
+		print_finish();
+		refresh();
+		while(!getch())
+			; 	
+		endwin();
+	}
 	return 0;
 }

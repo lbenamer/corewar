@@ -8,7 +8,7 @@ static t_pcs  *new_fork(t_pcs *src, int id, int pc)
 	nbr_pcs += 1;
 	int i = 0;
 	pcs = (t_pcs*)ft_memalloc(sizeof(t_pcs));
-	pcs->r = (int*)ft_memalloc(sizeof(int) * 17);
+	pcs->r = (int*)ft_memalloc(sizeof(int) * 16);
 	pcs->carry = src->carry;
 	pcs->alive = src->alive;
 	pcs->color = src->color;
@@ -17,7 +17,7 @@ static t_pcs  *new_fork(t_pcs *src, int id, int pc)
 	pcs->cycle = 1;
 	pcs->next = NULL;
 	pcs->prev = NULL;
-	while(i < 17)
+	while(i < 16)
 	{
 		pcs->r[i] = src->r[i];
 		i++;

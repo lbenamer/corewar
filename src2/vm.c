@@ -1,43 +1,76 @@
 #include "corewar.h"
 
-int check_alive(t_pcs **pcs)
+void free_pcs(t_pcs *pcs)
 {
-	int total;
+	free(pcs->r);
+	free(pcs);
+}
 
-	total = 0;
-	while(*pcs)
+t_pcs	*del_pcs(t_pcs *pcs)
+{
+
+	t_pcs *tmp_next;
+	t_pcs *tmp_prev;
+
+	tmp_next = pcs->next;
+	tmp_prev = pcs->prev;
+	if(pcs->prev)
 	{
-		if(!(*pcs)->alive)
+		free_pcs(pcs);
+		pcs = tmp_prev;
+		pcs->next = tmp_next;
+		if(tmp_next)
+			tmp_next->prev = pcs;
+	}
+	else if(pcs->next)
+	{
+		free_pcs(pcs);
+		pcs = tmp_next;
+		pcs->prev = NULL;
+	}
+	else
+	{
+		free_pcs(pcs);
+		pcs = NULL;
+		(ops.text & 4) ? printf("all process are dead \n") : 0;
+		return (NULL);
+	}
+	return (pcs);
+}
+
+t_pcs	*check_alive(t_pcs *pcs, int *total)
+{
+	while(pcs)
+	{
+		if(!pcs->alive)
 		{
-			if(del_pcs(*pcs) == -1)
-			{
-				(ops.text & 4) ? printf("all process are dead \n") : 0;
-				return (-1);
-			}
-			if(!(*pcs)->prev)
-				break ;
-			*pcs = (*pcs)->prev;
+			if(!(pcs = del_pcs(pcs)))
+				return (NULL);
+		}
+		else if(pcs->prev)
+		{
+			*total += pcs->alive;
+			pcs = pcs->prev;
 		}
 		else
 		{
-			total += (*pcs)->alive;
-			(*pcs)->alive = 0;
-			if(!(*pcs)->prev)
-				break ;
-			*pcs = (*pcs)->prev;	
+			*total += pcs->alive;
+			return (pcs);
 		}
 	}
-	*pcs = place_max(*pcs);
-	return (total);
+	return (pcs);
 }
+
 
 t_pcs  *check_to_die(t_pcs *pcs, int *die, int *n_check)
 {
 	static int 	cycle_to_die = CYCLE_TO_DIE;
 	int 		total;
 
-	if((total = check_alive(&pcs)) == -1)
+	total = 0;
+	if(!(pcs = check_alive(pcs, &total)))
 		return (NULL);
+	pcs = place_max(pcs);
 	if(total >= NBR_LIVE)
 	{	
 		cycle_to_die -= CYCLE_DELTA;
@@ -75,35 +108,4 @@ void	check_winer(t_vm *vm)
 		}
 		pl = pl->next;
 	}
-}
-
-int	del_pcs(t_pcs *pcs)
-{
-	(ops.text & 4) ? printf("Process %d has been destroyed\n", pcs->id) : 0;
-	nbr_pcs -= 1;
-	free(pcs->r);
-	free(pcs);
-	if(!pcs->next && !pcs->prev)
-	{
-		pcs = NULL;
-		return (-1);
-	}
-	else if(!pcs->next)
-	{	
-		pcs = pcs->prev;
-		pcs->next = NULL;
-	}
-	else if(!pcs->prev)
-	{
-		pcs = pcs->next;
-		pcs->prev = NULL;
-	}
-	else
-	{
-		pcs->prev->next = pcs->next;
-		pcs->next->prev = pcs->prev;
-		pcs = pcs->prev;
-	}
-	ops.all & V ? print_npcs(nbr_pcs) : 0;
-	return (1);
 }
