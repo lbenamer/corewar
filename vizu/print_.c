@@ -34,6 +34,8 @@ void reverse(int add , unsigned short blink, int color)
 
 }
 
+
+
 void blink_pos(int add, unsigned short blink, int color)
 {
 	int x;
@@ -45,16 +47,11 @@ void blink_pos(int add, unsigned short blink, int color)
 	x = (add % 64) * 3 + stx;
 	y = add / 64;
 
-	wattron(box_ram, COLOR_PAIR(color) |  A_REVERSE);
-	mvwprintw(box_ram, y, x, "%.2hhx", blink);
-	wattroff(box_ram, A_DIM | COLOR_PAIR(color) | A_REVERSE) ;
-	refresh();
-	// wrefresh(box_ram);
 	wattron(box_ram, COLOR_PAIR(color) | A_BOLD);
 	mvwprintw(box_ram, y, x, "%.2hhx", blink);
 	wattroff(box_ram, COLOR_PAIR(color) | A_BOLD) ;
 	refresh();
-	// wrefresh(box_ram);
+	wrefresh(box_ram);
 }
 
 void vizu_print_pgm(t_dt *dt)

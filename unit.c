@@ -2,12 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-int main(int argc, char const *argv[])
+int main(void)
 {
-
-	char *var = "ol";
-
-	printf("size of var = %lu\n", sizeof(var));
-
 	return 0;
 }

@@ -6,9 +6,20 @@ void free_pcs(t_pcs *pcs)
 	free(pcs);
 }
 
+
+void disp_pcs(t_pcs *pcs)
+{
+	while(pcs)
+	{
+		printf("pcs id = %d , color = %d, r[0] = %d\n", pcs->id, pcs->color, pcs->r[0]);
+		pcs = pcs->prev;
+	}
+}
+
 t_pcs	*del_pcs(t_pcs *pcs)
 {
 
+	(ops.text & 4) ? printf(RED"Process %d has been destroyed\n"STOP, pcs->id) : 0;
 	t_pcs *tmp_next;
 	t_pcs *tmp_prev;
 
@@ -40,21 +51,26 @@ t_pcs	*del_pcs(t_pcs *pcs)
 
 t_pcs	*check_alive(t_pcs *pcs, int *total)
 {
+	// printf("check_alive\n");
+	// disp_pcs(pcs);
 	while(pcs)
 	{
 		if(!pcs->alive)
 		{
+			// printf("kill\n");
 			if(!(pcs = del_pcs(pcs)))
 				return (NULL);
 		}
 		else if(pcs->prev)
 		{
 			*total += pcs->alive;
+			pcs->alive = 0;
 			pcs = pcs->prev;
 		}
 		else
 		{
 			*total += pcs->alive;
+			// pcs->alive = 0;
 			return (pcs);
 		}
 	}

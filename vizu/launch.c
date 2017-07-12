@@ -68,5 +68,6 @@ WIN *init_vm(void)
 void del_usage(void)
 {
 	mvwprintw(box_vm, 27, 3, "                                                                    ");
-	refresh();	
+	refresh();
+	wrefresh(box_vm);	
 }

@@ -45,42 +45,64 @@ void disp_usage(int error, char *arg)
 	exit(0);
 }
 
+// void disp_pcs(t_pcs *pcs)
+// {
+// 	while(pcs)
+// 	{
+// 		printf("pcs id = %d , color = %d, r[0] = %d\n", pcs->id, pcs->color, pcs->r[0]);
+// 		pcs = pcs->next;
+// 	}
+// }
+
 
 void 				init_t_vm(t_vm *vm)
 {
 	vm->cycles = 0;
 	vm->last_live = 0;
-	vm->plst = NULL;
-	vm->ram = NULL;
+	vm->plst = new_pl(0, NULL, NULL, 1);
+	vm->ram = (char*)ft_memalloc(sizeof(char) * MEM_SIZE);
 }
 
 int main(int ac, char **av)
 {
 	t_dt 	*dt;
 	t_vm 	vm;
+	t_pcs *pcs;
+	int n;
+
 	
 	if(ac == 1)
-			disp_usage(0, NULL);
+		disp_usage(0, NULL);
+
+
+
 	g_av = av;
 	nbr_pcs = 0;
 	init_ops(&ops);
 	init_t_vm(&vm);
-	t_pcs *pcs = NULL;
+	pcs = new_pcs(0, 0, 1, 1);
+
 	if(!(dt = parse_args(ac, av)))
 		disp_usage(0, NULL);
-	vm.ram = load_process(dt);
- 	cr_pcs_plst(dt, &pcs, &vm.plst);
+
+	n = load_ram(dt, vm.ram);
+	// print_mem(vm.ram, MEM_SIZE, 1);
+ 	load_pcs_plst(dt, pcs, vm.plst, n);
+ 	// disp_pcs(pcs);
  	if(ops.all & V)
  	{
+ 		// exit(0);
+ 		launch_vizu();
 		vizu_print_pgm(dt);
  		print_player(vm.plst);
  		print_npcs(nbr_pcs); 
  		while(getch() == 0)
 			;
 		del_usage();
-		refresh();
+		// refresh();
  	}
 	run_pcs(pcs, &vm);
+	// free(pcs);
 	ops.dump && !checkops(V) ? print_mem(vm.ram, MEM_SIZE, 1) : 0;	
 	if(ops.all & V)
 	{
@@ -88,7 +110,8 @@ int main(int ac, char **av)
 		refresh();
 		while(!getch())
 			; 	
-		endwin();
+	 	endwin();
 	}
+	endwin();
 	return 0;
 }

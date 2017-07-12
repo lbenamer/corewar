@@ -2,37 +2,25 @@
 
 void print_title(WIN *win)
 {
-	int i;
 	int x;
 	int y; 
 	int hd;
-	char **header;
 	char *line;
 
-	i = 0;
+	getmaxyx(win, y, x);
+	y = 0;
 	wattron(win, COLOR_PAIR(1));
 	hd = open("header_m42.txt", O_RDONLY);
-	header = (char **)ft_memalloc(sizeof(char *) * 5);
 	while(get_next_line(hd, &line) > 0)
-	{
-		header[i++] = ft_strdup(line);
-		ft_strdel(&line);
+	 {
+	 	mvwprintw(win, y ,  x / 2 - (ft_strlen(line) / 2), "%s", line);
+	 	++y;
+	 	free(line);
+	 	line = NULL;
 	}
-	ft_strdel(&line);
-	getmaxyx(win, y, x);
-	i = -1;
-	
-	while(header[++i])
-	{
-	 	mvwprintw(win, i ,  x / 2 - (ft_strlen(header[i]) / 2), "%s", header[i]);
-	 	ft_strdel(&header[i]);
-	}
-	
-	free(header);
-	
+	wattroff(win, COLOR_PAIR(1));
 	refresh();
 	wrefresh(win);
-	wattroff(win, COLOR_PAIR(1));
 }
 
 WIN  *create_box(t_win init, int bd)
@@ -44,9 +32,9 @@ WIN  *create_box(t_win init, int bd)
 	win = newwin(init.height, init.width, init.starty , init.startx);
 	wattron(win, COLOR_PAIR(1));
 	box(win, bd, bd);
+	wattroff(win, COLOR_PAIR(1));
 	refresh();
 	wrefresh(win);
-	wattroff(win, COLOR_PAIR(1));
 	return (win);
 }
 
@@ -129,7 +117,7 @@ void print_player(t_pl *pl)
 		y += 4;
 		tmp = tmp->next;
 	}
-	wattron(box_vm, A_BOLD);
+	wattroff(box_vm, A_BOLD);
 	refresh();
 	wrefresh(box_vm);
 }

@@ -51,6 +51,7 @@ typedef struct s_pcs
 typedef struct s_pl
 {
 	char 			*name;
+	char			*com;
 	int 			player;
 	unsigned long 	live;
 	int 			id;
@@ -68,12 +69,12 @@ typedef struct s_vm
  
 typedef struct s_option
 {
-
 	int all;
 	int text;
 	int dump;
 	int n;
 }				t_option;
+
 typedef void (*t_ins)(t_pcs*, t_vm*);
 
 int 		nbr_pcs;
@@ -141,11 +142,11 @@ t_dt 	*parse_args(int ac, char **av);
 /*
 ** man_list.c
 */
-char		*load_process(t_dt *dt);
+int			load_ram(t_dt *dt, char *ram);
+void 		load_pcs_plst(t_dt *dt, t_pcs *pcs, t_pl *pl, int n);
 t_pcs  		*new_pcs(int player, int pc, int id, int color);
-void 		cr_pcs_plst(t_dt *dt, t_pcs **pcs, t_pl **pl);
 t_dt  		*new_dt(int fd, int player);
-t_pl  		*new_pl(int player, char *name, int id);
+t_pl  		*new_pl(int player, char *name, char *com, int id);
 /*
 ** vm.c
 */

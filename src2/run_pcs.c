@@ -19,8 +19,6 @@ void free_all_pcs(t_pcs *pcs)
 		pcs = del_pcs(pcs);
 }
 
-
-
 static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 {
 	unsigned short lx;
@@ -29,16 +27,15 @@ static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 	{
 		pcs->pc &= 0x0fff;
 		lx = vm->ram[pcs->pc];
-		ops.all & V ? blink_pos(pcs->pc, lx, pcs->color) : 0;
 		if (lx > 0 && lx < 17)
 		{
-			ops.all & V ? reverse(pcs->pc, lx, pcs->color) : 0;
 			if (get_cycles(lx) == pcs->cycle)
-			{
-				ops.all & V ? blink_pos(pcs->pc, lx, pcs->color) : 0;
+	 		{
+				ops.all & V ? reverse(pcs->pc, lx, pcs->color) : 0;
 				(ops.text & 1) ? printf("P  %5d |", pcs->id) : 0;
 				ins[lx](pcs, vm);
 				pcs->cycle = 1;
+				ops.all & V ? blink_pos(pcs->pc, lx, pcs->color) : 0;
 			}
 			else
 				++pcs->cycle;
@@ -97,7 +94,6 @@ void				run_pcs(t_pcs *pcs, t_vm *vm)
 				break ;
 	}
 	free(tb_ins);
-	// while(1);
 	free_all_pcs(pcs);
 	check_winer(vm);
 }
