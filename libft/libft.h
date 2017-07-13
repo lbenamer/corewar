@@ -21,6 +21,17 @@
 # include <fcntl.h>
 # define BUFF_SIZE 1024
 
+
+typedef struct					s_struct
+{
+	char						*s1;
+	char						*s2;
+	int							fd;
+	int							pad;
+	struct s_struct				*next;
+	struct s_struct				*prev;
+}								t_struct;
+
 typedef struct		s_list
 {
 	void			*content;
@@ -156,26 +167,26 @@ char				*ft_strsub_f(char *s1, size_t start, size_t len);
 
 char				*ft_make_print(t_print p, char *fmt, int i, int *start);
 char				*ft_joinstr(char *str, int free, int nb, ...);
-int					ft_printf(char *fmt, ...);
 char				*ft_sv_flags(char *ops);
 char				*ft_fixops(void *arg, t_flags f, t_ops sv, t_mod mod);
-t_ops				ft_disp_ops(char *ops);
 char				*ft_sv_ops(char *fmt);
 char				*ft_sv_modif(char *ops);
 int					ft_isconv(int c);
 int					ft_isflag(char c);
 int					ft_sv_chp(char *ops);
 int					ft_sv_precis(char *ops);
+int					ft_printf(char *fmt, ...);
 int					ft_ismodif(char c);
 char				ft_sv_conv(char *ops);
 char				*ft_make_argst(char *ops, void *arg);
 char				*ft_conv(t_ops sv, void *arg, t_mod mod);
-t_flags				ft_check_flags(char *flags);
 char				*ft_unsgd_fgchp(char *agst, t_flags fg, int chp, int pr);
 char				*ft_strset(char c, size_t len);
 char				*ft_unsgd_precis(char *argst, int precis);
 char				*ft_sgd_fgchp(char *argst, t_flags f, int chp, int precis);
 char				*ft_sgd_precis(char *args, int precis);
+t_ops				ft_disp_ops(char *ops);
+t_flags				ft_check_flags(char *flags);
 t_mod				ft_check_modif(char *modif);
 char				*ft_oct_fgchp(char *argst, t_flags fg, int chp, int precis);
 char				*ft_x_fgchp(char *argst, t_flags fg, int chp, int precis);

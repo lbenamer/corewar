@@ -8,10 +8,10 @@ void print_title(WIN *win)
 	char *line;
 
 	getmaxyx(win, y, x);
-	y = 0;
+	y = 1;
 	wattron(win, COLOR_PAIR(1));
 	hd = open("header_m42.txt", O_RDONLY);
-	while(get_next_line(hd, &line) > 0)
+	while(get_next_line(hd, &line))
 	 {
 	 	mvwprintw(win, y ,  x / 2 - (ft_strlen(line) / 2), "%s", line);
 	 	++y;
