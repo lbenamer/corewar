@@ -17,7 +17,7 @@ static t_pcs  *new_fork(t_pcs *src, int id, int pc)
 	pcs->cycle = 1;
 	pcs->next = NULL;
 	pcs->prev = NULL;
-	while(i < 16)
+	while (i < 16)
 	{
 		pcs->r[i] = src->r[i];
 		i++;

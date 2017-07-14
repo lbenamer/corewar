@@ -2,7 +2,7 @@
 
 t_pcs		*place_max(t_pcs *pcs)
 {
-	while(pcs->next)
+	while (pcs->next)
 		pcs = pcs->next;
 	return (pcs);
 }
@@ -31,8 +31,8 @@ int			nb_process(t_dt *dt)
 	int ret;
 
 	ret = 0;
-	if(dt)
-		while(dt && ++ret)
+	if (dt)
+		while (dt && ++ret)
 			dt = dt->next;
 	return (ret);
 }

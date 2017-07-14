@@ -40,7 +40,7 @@ void			disp_usage(int error, char *arg)
 
 void			disp_player(t_dt *dt)
 {
-	while(dt)
+	while (dt)
 	{
 		printf("Player: [ %d ] - Size : %d oct - Name: %s -> %s \n",dt->player, dt->size, dt->name, dt->com);
 		dt = dt->next;
@@ -53,7 +53,7 @@ void			display_start(t_dt *dt, t_pl *pl)
 	vizu_print_pgm(dt);
 	print_player(pl);
 	print_npcs(nbr_pcs);
-	while(getch() == 0)
+	while (getch() == 0)
 		;
 	del_usage();
 }
@@ -62,7 +62,7 @@ void			display_finish(void)
 {
 	print_finish();
 	refresh();
-	while(!getch())
+	while (!getch())
 		;
 	endwin();
 }

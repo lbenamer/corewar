@@ -5,9 +5,9 @@ static char 	*store(char *mem, unsigned char *store, size_t size, size_t add)
 	size_t i;
 
 	i = -1;
-	while(++i < size)
+	while (++i < size)
 		mem[(add + i) % MEM_SIZE] = store[i];
-	return(mem);
+	return (mem);
 }
 
 void st(t_pcs *pcs, t_vm *vm)
@@ -31,7 +31,7 @@ void st(t_pcs *pcs, t_vm *vm)
 	buf = mem_rev(buf, 4);
 	(ops.text & 1) ? printf("(with pc and mod: %d)\n",  p[1]) : 0;
 	store(vm->ram, buf, 4, p[1]);
-	if(ops.all & V)
+	if (ops.all & V)
 		vizu_st(pcs->color, buf, 4, p[1]);
 }
 

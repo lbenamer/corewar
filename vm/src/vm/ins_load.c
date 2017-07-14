@@ -14,7 +14,7 @@ void lld(t_pcs *pcs, t_vm *vm)
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
-	if(read_opc(opc, 1) == IND_CODE)
+	if (read_opc(opc, 1) == IND_CODE)
 	{
 		p[0] = (p[0] + pc) & 0x0fff;
 		// sp[0] %= MEM_SIZE;
@@ -45,7 +45,7 @@ void ld(t_pcs *pcs, t_vm *vm)
 	opc = vm->ram[pcs->pc];
 	pcs->pc = (pcs->pc + 1) % MEM_SIZE;
 	pcs->pc = (pcs->pc + load_param(pcs, vm->ram, opc, &p[0])) % MEM_SIZE;
-	if(read_opc(opc, 1) == IND_CODE)
+	if (read_opc(opc, 1) == IND_CODE)
 	{
 		p[0] = (pc + p[0] % IDX_MOD) & 0x0fff;
 		// p[0] %= MEM_SIZE;

@@ -1,10 +1,10 @@
 #include "corewar.h"
 
-int 	chk_magic(int fd)
+int		chk_magic(int fd)
 {
-	unsigned int 	magic = COREWAR_EXEC_MAGIC;
-	unsigned char* 	octet;
-	unsigned char 	buf[4];
+	unsigned int	magic = COREWAR_EXEC_MAGIC;
+	unsigned char	*octet;
+	unsigned char	buf[4];
 
 	read(fd, buf, 4);
 	octet = (unsigned char *) & magic;
@@ -14,8 +14,8 @@ int 	chk_magic(int fd)
 
 char	*get_string(int fd, size_t size)
 {
-	char *string;
-	char buf[size];
+	char	*string;
+	char	buf[size];
 
 	read(fd, buf, size);
 	string = ft_strnew(ft_strlen(buf));
@@ -45,7 +45,7 @@ char	*get_prog(int fd, unsigned int size)
 	prog = (char*)ft_memalloc(sizeof(char) * size);
 	if (read(fd, prog, size) != size)
 		disp_usage(-5, *g_av);
-	return(prog);
+	return (prog);
 }
 
 t_dt 	*get_dt(t_dt *dt, int fd)
@@ -53,7 +53,7 @@ t_dt 	*get_dt(t_dt *dt, int fd)
 	t_dt *tmp;
 	static int n = 0;
 
-	if(!dt)
+	if (!dt)
 		dt = checkops(N) ? new_dt(fd, ops.n) : new_dt(fd, --n);
 	else
 	{

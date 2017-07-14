@@ -12,7 +12,7 @@ int	load_ram(t_dt *dt, char *ram)
 	ret = 0;
 	part = MEM_SIZE / nb_process(dt);
 	// ram = (char*)ft_memalloc(sizeof(char) * MEM_SIZE);
-	while(dt)
+	while (dt)
 	{
 		ft_memcpy(ram + n, dt->prog, dt->size);
 		n += part;
@@ -59,7 +59,7 @@ void load_pcs_plst(t_dt *dt, t_pcs *pcs, t_pl *pl, int n)
 	// pcs = new_pcs(dt->player, 0, id, id);
 	// pl = new_pl(dt->player, dt->name, id);
 	dt = dt->next;
-	while(dt)
+	while (dt)
 	{
 		pl->next = new_pl(dt->player, dt->name, dt->com, ++id);
 		pcs->next = new_pcs(dt->player, pc, id, id);

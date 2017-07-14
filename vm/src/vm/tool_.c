@@ -4,9 +4,9 @@ int					is_set(t_dt *dt, int n)
 {
 	t_dt *tmp;
 	tmp = dt;
-	while(tmp)
+	while (tmp)
 	{
-		if(tmp->player == n)
+		if (tmp->player == n)
 			return (1);
 		tmp = tmp->next;
 	}
@@ -19,11 +19,11 @@ int					is_num(char *str)
 
 	i = 0;
 
-	while(str[i] == ' ')
+	while (str[i] == ' ')
 		++i;
 	(str[0] == '-' || str[0] == '+') ? ++i : 0;
-	while(str[i])
-		if(!ft_isdigit(str[i++]))
+	while (str[i])
+		if (!ft_isdigit(str[i++]))
 			return (0);
 	return (1);
 }
@@ -42,9 +42,9 @@ void				print_mem(char *str, size_t n)
 
 	i = -1;
 	ft_printf("0x%.4x : ", 0);
-	while(++i < n)
+	while (++i < n)
 	{
-		if(((i % 64) == 0) && i)
+		if (((i % 64) == 0) && i)
 		{
 			ft_printf("\n");
 			ft_printf("0x%.4zx : ", i);
@@ -61,11 +61,11 @@ unsigned char		*mem_rev(unsigned char *mem, int n)
 
 	i = 0;
 	int nb = n;
-	while(--n >= nb / 2)
+	while (--n >= nb / 2)
 	{
 		tmp = mem[i];
 		mem[i++] = mem[n];
 		mem[n] = tmp;
 	}
-	return(mem);
+	return (mem);
 }

@@ -15,14 +15,14 @@
 static	int			get_cycles(int rd)
 {
 	int tab[17] = {0, 10, 5, 5, 10 , 10, 6 , 6, 6,20, 25, 25 ,800, 10 ,50, 1000, 2};
-	return(tab[rd]);
+	return (tab[rd]);
 }
 
 
 static	void			free_all_pcs(t_pcs *pcs)
 {
 	ops.text &= 0xfb;
-	while(pcs)
+	while (pcs)
 		pcs = del_pcs(pcs);
 }
 
