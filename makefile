@@ -12,12 +12,11 @@
 
 CC      =   gcc
 RM      =   rm -f
-CFLAGS  =  -Wall -Werror -Wextra
+CFLAGS  =  -Wall -Werror -Wextra -Wpadded
 LIB		=	-L./vm/libft -lft -lncurses
 NAME    =   mafia42
 SRCS    =	vm/src/vm/main.c \
 			vm/src/vm/get.c \
-			vm/src/vm/chk.c \
 			vm/src/vm/run_pcs.c \
 			vm/src/vm/ins_logic.c \
 			vm/src/vm/ins_load.c \
@@ -30,6 +29,7 @@ SRCS    =	vm/src/vm/main.c \
 			vm/src/vm/vm.c \
 			vm/src/vm/tool_.c \
 			vm/src/vm/man_list.c \
+			vm/src/vm/display.c \
 			vm/src/vizu/create_win.c \
 			vm/src/vizu/launch.c \
 			vm/src/vizu/print.c  \

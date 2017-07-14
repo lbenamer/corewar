@@ -2,8 +2,8 @@
 
 void print_winner(char *name, int id)
 {
-	int x;
-	int y;
+	size_t x;
+	size_t y;
 	getmaxyx(box_vm, y,x);
 	wattron(box_vm, A_BOLD);
 	mvwprintw(box_vm, 40, (x - 11) / 2, "** PLAYER **");
@@ -18,9 +18,9 @@ void print_winner(char *name, int id)
 
 void reverse(int add , unsigned short blink, int color)
 {
-	int x;
-	int y;
-	int stx;
+	size_t x;
+	size_t y;
+	size_t stx;
 
 	getmaxyx(box_ram, y, x);
 	stx = (x - 192) / 2;
@@ -38,9 +38,9 @@ void reverse(int add , unsigned short blink, int color)
 
 void blink_pos(int add, unsigned short blink, int color)
 {
-	int x;
-	int y;
-	int stx;
+	size_t x;
+	size_t y;
+	size_t stx;
 
 	getmaxyx(box_ram, y, x);
 	stx = (x - 192) / 2;
@@ -66,7 +66,7 @@ void vizu_print_pgm(t_dt *dt)
 	color = 1;
 	tmp = dt;
 	part = MEM_SIZE / nb_process(dt);
-	i_color();
+	i_color(); 
 	while(tmp)
 	{
 		wattron(box_ram, COLOR_PAIR(color));
@@ -82,9 +82,9 @@ void vizu_print_pgm(t_dt *dt)
 void vizu_print_mem(unsigned char *buf, size_t size, size_t add)
 {
 
-	int x;
-	int y;
-	int stx;
+	size_t x;
+	size_t y;
+	size_t stx;
 	size_t i;
 
 	getmaxyx(box_ram, y, x);
@@ -114,6 +114,7 @@ void 	vizu_st(int color, unsigned char *buf, size_t size, size_t add)
 	vizu_print_mem(buf, size, add);
 	wattroff(box_ram, COLOR_PAIR(color) | A_BOLD);
 }
+
 
 
 

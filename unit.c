@@ -1,19 +1,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "libft/libft.h"
+#include "vm/libft/libft.h"
 int main(void)
 {
-
-	int fd;
-	char *line = NULL;
-	fd = open("header_m42.txt", O_RDONLY);
-	while(get_next_line(fd, &line) > 0)
+	int i = 0;
+	while(++i < 108)
 	{
-		ft_putendl(line);
-		free(line);
-		line = NULL;
+		dprintf(1, "\033[%.2dmphrase teste !\n", i);
 	}
-	while(1);
-	return 0;
 }

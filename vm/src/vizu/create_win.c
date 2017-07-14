@@ -121,6 +121,3 @@ void print_player(t_pl *pl)
 	refresh();
 	wrefresh(box_vm);
 }
-
-
-

@@ -31,6 +31,10 @@
 # Debug files
 *.dSYM/
 *.su
+
 # champions
 *.cor
+
+# others
+.DS_Store
 Contact GitHub API Training Shop Blog About

@@ -17,7 +17,6 @@ void launch_vizu(void)
 	print_ram(box_ram);
 	print_vm(box_vm);
 	refresh();	
-	// wrefresh(box_title);
 }
 
 WIN *init_title(void)

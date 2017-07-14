@@ -59,30 +59,23 @@ static char	*ft_strsub_free(char *s, size_t start, size_t len)
 int		get_next_line(int fd, char **line)
 {
 	size_t i;
-	char *buf; //[BUFF_SIZE];
+	char buf[BUFF_SIZE + 1];
 	static char *s = 0;
 
 	i = -1;
-	buf = ft_strnew(BUFF_SIZE);
+	ft_bzero(buf, BUFF_SIZE);
 	if((read(fd, buf, BUFF_SIZE)) == -1 || fd < 0)
 		return (-1);
 	if(ft_strlen_p(buf))
 		s = ft_strjoin_free(s, buf);
 	if(!(s))
-	{
-		ft_strdel(&buf);
 		return (0);
-	}
 	if(!ft_strchr(s, '\n') && ft_strlen_p(buf))
-	{
-		ft_strdel(&buf);
 		return(get_next_line(fd, line));
-	}
 	while(s[++i] != '\n' && s[i])
 			;
 	*line = ft_strsub(s, 0, i);
 	s[i] == '\n' ? s = ft_strsub_free(s, i + 1, ft_strlen(s) - i + 1) :
 	ft_strdel(&s);
-	ft_strdel(&buf);
-	return(1);	
+	return(1);
 }

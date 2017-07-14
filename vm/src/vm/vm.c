@@ -1,28 +1,11 @@
 #include "corewar.h"
 
-void free_pcs(t_pcs *pcs)
-{
-	free(pcs->r);
-	free(pcs);
-}
-
-
-void disp_pcs(t_pcs *pcs)
-{
-	while(pcs)
-	{
-		printf("pcs id = %d , color = %d, r[0] = %d\n", pcs->id, pcs->color, pcs->r[0]);
-		pcs = pcs->prev;
-	}
-}
-
-t_pcs	*del_pcs(t_pcs *pcs)
+t_pcs			*del_pcs(t_pcs *pcs)
 {
 
 	(ops.text & 4) ? printf(RED"Process %d has been destroyed\n"STOP, pcs->id) : 0;
 	t_pcs *tmp_next;
 	t_pcs *tmp_prev;
-
 	tmp_next = pcs->next;
 	tmp_prev = pcs->prev;
 	if(pcs->prev)
@@ -49,15 +32,12 @@ t_pcs	*del_pcs(t_pcs *pcs)
 	return (pcs);
 }
 
-t_pcs	*check_alive(t_pcs *pcs, int *total)
+t_pcs			*check_alive(t_pcs *pcs, int *total)
 {
-	// printf("check_alive\n");
-	// disp_pcs(pcs);
 	while(pcs)
 	{
 		if(!pcs->alive)
 		{
-			// printf("kill\n");
 			if(!(pcs = del_pcs(pcs)))
 				return (NULL);
 		}
@@ -70,7 +50,6 @@ t_pcs	*check_alive(t_pcs *pcs, int *total)
 		else
 		{
 			*total += pcs->alive;
-			// pcs->alive = 0;
 			return (pcs);
 		}
 	}
@@ -78,7 +57,7 @@ t_pcs	*check_alive(t_pcs *pcs, int *total)
 }
 
 
-t_pcs  *check_to_die(t_pcs *pcs, int *die, int *n_check)
+t_pcs			*check_to_die(t_pcs *pcs, int *die, int *n_check)
 {
 	static int 	cycle_to_die = CYCLE_TO_DIE;
 	int 		total;
@@ -109,7 +88,7 @@ t_pcs  *check_to_die(t_pcs *pcs, int *die, int *n_check)
 	return (pcs);
 }
 
-void	check_winer(t_vm *vm)
+void			check_winer(t_vm *vm)
 {
 	t_pl *pl;
 

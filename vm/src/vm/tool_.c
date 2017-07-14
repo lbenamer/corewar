@@ -1,6 +1,6 @@
 #include "corewar.h"
 
-int is_set(t_dt *dt, int n)
+int					is_set(t_dt *dt, int n)
 {
 	t_dt *tmp;
 	tmp = dt;
@@ -13,7 +13,7 @@ int is_set(t_dt *dt, int n)
 	return (0);
 }
 
-int is_num(char *str)
+int					is_num(char *str)
 {
 	int i;
 
@@ -28,7 +28,7 @@ int is_num(char *str)
 	return (1);
 }
 
-void init_ops(t_option *ops)
+void				init_ops(t_option *ops)
 {
 	ops->all = 0;
 	ops->text = 0;
@@ -36,32 +36,25 @@ void init_ops(t_option *ops)
 	ops->n = 0;
 }
 
-void print_mem(char *str, size_t n, int fd)
+void				print_mem(char *str, size_t n)
 {
 	size_t i;
 
 	i = -1;
-	fd = 0;
-	dprintf(fd, "0x%.4x : ", 0);
+	ft_printf("0x%.4x : ", 0);
 	while(++i < n)
 	{
 		if(((i % 64) == 0) && i)
 		{
-			dprintf(fd, "\n");
-			dprintf(fd, "0x%.4zx : ", i);
+			ft_printf("\n");
+			ft_printf("0x%.4zx : ", i);
 		}
-		if(i < 2048 && str[i] != 0)
-			dprintf(fd, BLUE"%.2hhx "STOP, str[i]);
-		else if(i >= 2048  && i < 4096 && str[i] != 0)
-			dprintf(fd, RED"%.2hhx "STOP, str[i]);
-		else
-			dprintf(fd, "%.2hhx ", str[i]);
+		ft_printf("%.2hhx ", str[i]);
 	}
-	dprintf(fd,"\n");
-	dprintf(fd, "\n");
+	ft_printf("\n");
 }
 
-unsigned char	*mem_rev(unsigned char *mem, int n)
+unsigned char		*mem_rev(unsigned char *mem, int n)
 {
 	char tmp;
 	int i;

@@ -12,9 +12,9 @@ typedef struct				s_win
 	int	width;
 }							t_win;
 
-WIN 						*box_vm;
-WIN 						*box_ram;
-WIN 						*box_title;
+ WIN 						*box_vm;
+ WIN 						*box_ram;
+ WIN 						*box_title;
 
 /*
 **launch.c

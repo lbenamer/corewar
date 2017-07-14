@@ -12,14 +12,21 @@
 
 #include "corewar.h"
 
-void free_all_pcs(t_pcs *pcs)
- {
+static	int			get_cycles(int rd)
+{
+	int tab[17] = {0, 10, 5, 5, 10 , 10, 6 , 6, 6,20, 25, 25 ,800, 10 ,50, 1000, 2};
+	return(tab[rd]);
+}
+
+
+static	void			free_all_pcs(t_pcs *pcs)
+{
 	ops.text &= 0xfb;
 	while(pcs)
 		pcs = del_pcs(pcs);
 }
 
-static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
+static	void			clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 {
 	unsigned short lx;
 
@@ -30,7 +37,7 @@ static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 		if (lx > 0 && lx < 17)
 		{
 			if (get_cycles(lx) == pcs->cycle)
-	 		{
+			{
 				ops.all & V ? reverse(pcs->pc, lx, pcs->color) : 0;
 				(ops.text & 1) ? printf("P  %5d |", pcs->id) : 0;
 				ins[lx](pcs, vm);
@@ -49,7 +56,7 @@ static	void		clock(t_pcs *pcs, t_vm *vm, t_ins *ins)
 	}
 }
 
-static	void		init_ins(t_ins *ins)
+static	void			init_ins(t_ins *ins)
 {
 	ins[0] = NULL;
 	ins[1] = &live;

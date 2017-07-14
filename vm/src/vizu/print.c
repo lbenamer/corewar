@@ -3,6 +3,7 @@
 void print_alive(int id, int live)
 {
 	int y;
+	
 	id == 1 ? y = 12 : 0;
 	id == 2 ? y = 16 : 0;
 	id == 3 ? y = 20 : 0;	
