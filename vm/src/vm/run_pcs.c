@@ -12,12 +12,29 @@
 
 #include "corewar.h"
 
-static	int			get_cycles(int rd)
+static	int				get_cycles(int rd)
 {
-	int tab[17] = {0, 10, 5, 5, 10 , 10, 6 , 6, 6,20, 25, 25 ,800, 10 ,50, 1000, 2};
+	int tab[17];
+
+	tab[0] = 0;
+	tab[1] = 10;
+	tab[2] = 5;
+	tab[3] = 5;
+	tab[4] = 10;
+	tab[5] = 10;
+	tab[6] = 6;
+	tab[7] = 6;
+	tab[8] = 6;
+	tab[9] = 20;
+	tab[10] = 25;
+	tab[11] = 25;
+	tab[12] = 800;
+	tab[13] = 10;
+	tab[14] = 50;
+	tab[15] = 1000;
+	tab[16] = 2;
 	return (tab[rd]);
 }
-
 
 static	void			free_all_pcs(t_pcs *pcs)
 {

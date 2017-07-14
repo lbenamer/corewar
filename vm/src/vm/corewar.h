@@ -66,10 +66,10 @@ typedef struct 		s_pl
 
 typedef struct 		s_vm
 {
-	t_pl  			*plst;
-	char 			*ram;
-	int 			last_live;
-	int 			cycles;
+	t_pl			*plst;
+	char			*ram;
+	int				last_live;
+	int				cycles;
 }					t_vm;		
  
 typedef struct 		s_option

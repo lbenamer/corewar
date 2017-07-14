@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lbenamer <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/07/14 16:04:32 by lbenamer          #+#    #+#             */
+/*   Updated: 2017/07/14 16:04:36 by lbenamer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "corewar.h"
 
 static void		init_t_vm(t_vm *vm)
@@ -8,13 +20,13 @@ static void		init_t_vm(t_vm *vm)
 	vm->ram = (char*)ft_memalloc(sizeof(char) * MEM_SIZE);
 }
 
-int 			main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	t_dt	*dt;
 	t_vm	vm;
 	t_pcs	*pcs;
 	int		n;
-	
+
 	if (ac < 2)
 		disp_usage(0, NULL);
 	g_av = av;
@@ -32,5 +44,5 @@ int 			main(int ac, char **av)
 	ops.dump && !checkops(V) ? print_mem(vm.ram, MEM_SIZE) : 0;
 	if (ops.all & V)
 		display_finish();
-	return 0;
+	return (0);
 }
